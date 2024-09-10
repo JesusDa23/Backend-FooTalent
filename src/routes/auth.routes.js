@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import Auth from '../controllers/auth.controller.js'
 import { validateJWT } from '../middlewares/validate-jwt.js'
+
 const router = Router()
 
 router.get('/', (req, res) => {

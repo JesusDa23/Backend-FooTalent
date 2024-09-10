@@ -1,4 +1,5 @@
 import { hash, compare } from 'bcrypt';
+
 const SALT_ROUNDS = 10;
 
 export const encrypt = async (password) => {

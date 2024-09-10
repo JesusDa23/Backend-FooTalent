@@ -1,12 +1,8 @@
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-
-dotenv.config()
-const dbUri = process.env.DB_URI
+import { connect } from 'mongoose'
 
 export async function connectToDatabase() {
     try {
-        await mongoose.connect(dbUri)
+        await connect(process.env.DB_URI)
 
         console.log('Conexión a MongoDB Atlas establecida con éxito!')
     } catch (err) {

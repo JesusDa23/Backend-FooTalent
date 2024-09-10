@@ -1,6 +1,7 @@
 import User from '../models/user.model.js'
 import { createToken } from '../utils/createToken.js'
 import { encrypt, verified } from '../utils/bcryp.handler.js'
+
 const AuthService = {}
 
 AuthService.login = async (email, password) => {
@@ -26,16 +27,21 @@ AuthService.login = async (email, password) => {
 
 AuthService.register = async (name, email, password) => {
     const userExists = await User.findOne({ email })
+
     if (userExists) {
         throw new Error('User already exists')
     }
+
     const hashPassword = await encrypt(password)
+
     const newUser = new User({
         username,
         email,
         password: hashPassword
     })
+    
     const user = await newUser.save()
+
     const token = createToken({ id: user.id, role: user.role })
     return {
         user: {
@@ -49,9 +55,11 @@ AuthService.register = async (name, email, password) => {
 
 AuthService.profile = async id => {
     const user = await User.findById(req.userId)
+
     if (!user) {
         throw new Error('User not found')
     }
+
     return {
         id: user.id,
         name: user.name,
@@ -62,9 +70,12 @@ AuthService.profile = async id => {
 
 AuthService.registerGoogle = async user => {
     const { email, name } = user
+
     const userExist = await User.findOne({ where: { email } })
+
     if (userExist) {
         const token = createToken({ id: userExist.id, role: userExist.role })
+
         return {
             user: {
                 id: userExist.id,
@@ -75,8 +86,11 @@ AuthService.registerGoogle = async user => {
         }
     }
     const password = await encrypt(Math.random().toString(36).substring(2))
-    const newUser = await User.create({ name, email, password })
+
+    const newUser = await new User({ name, email, password })
+
     const token = createToken({ id: newUser.id, role: newUser.role })
+
     return {
         user: {
             id: newUser.id,

@@ -1,4 +1,5 @@
 import AuthService from '../services/auth.services.js';
+
 const Auth = {};
 
 Auth.login = async (req, res) => {
