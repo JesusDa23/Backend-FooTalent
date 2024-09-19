@@ -13,7 +13,7 @@ AuthService.login = async (email, password) => {
     if (!isCorrect) {
         throw new Error('Invalid credentials')
     }
-    const token = createToken({ id: user.id, role: user.role })
+    const token = createToken({ id: user.id, rol: user.rol })
     console.log(user)
     return {
         user: {
@@ -27,11 +27,11 @@ AuthService.login = async (email, password) => {
     }
 }
 
-AuthService.register = async (name, email, password) => {
+AuthService.register = async (name, email, password, rol) => {
     const userExists = await User.findOne({ email })
 
     if (userExists) {
-        throw new Error('User already exists')
+        throw new Error('Usuario existente')
     }
 
     const hashPassword = await encrypt(password)
@@ -39,12 +39,13 @@ AuthService.register = async (name, email, password) => {
     const newUser = new User({
         name,
         email,
-        password: hashPassword
+        password: hashPassword,
+        rol
     })
 
     const user = await newUser.save()
 
-    const token = createToken({ id: user.id, role: user.rol })
+    const token = createToken({ id: user.id, rol: user.rol })
     return {
         user: {
             id: user.id,

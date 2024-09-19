@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import Auth from '../controllers/auth.controller.js'
+import { checkAdminRole } from '../middlewares/validate-role.js'
 import { validateJWT } from '../middlewares/validate-jwt.js'
-
 const router = Router()
 
 router.get('/', (req, res) => {
@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 })
 
 router.post('/login', Auth.login)
-router.post('/register', Auth.register)
+router.post('/register', validateJWT, checkAdminRole, Auth.register)
 router.post('/logout', Auth.logout)
 router.get('/profile', validateJWT, Auth.profile)
 
