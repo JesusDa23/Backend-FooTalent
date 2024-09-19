@@ -5,7 +5,7 @@ export default function executeRegister() {
     let result = null
 
     if (!executed) {
-        result = AuthService.register('', '', '', '', 'admin')
+        result = AuthService.register('33.892.323', 'Bruno Jular', 'bjular@mix-group.com.ar', 'Teclado25', 'admin')
         executed = true
     }
 
