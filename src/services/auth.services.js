@@ -37,29 +37,11 @@ AuthService.login = async (dni, password) => {
 AuthService.register = async (dni, name, email, password, rol) => {
     try {
         const userCount = await User.countDocuments()
+        if (userCount === 0) rol = 'admin'
+        const userExists = await User.findOne({ email })
 
-        if (userCount === 0) {
-            const hashPassword = await encrypt(password)
-
-            const adminPrincipal = new User({
-                dni,
-                name,
-                email,
-                password: hashPassword,
-                rol
-            })
-
-            await adminPrincipal.save()
-        }
-
-        const { rol: currentUserRole } = req.user
-
-        if (currentUserRole !== 'admin') {
-            return res.status(403).json({ message: 'Acceso denegado: Solo los administradores pueden registrar usuarios.' })
-        }
-
-        if (rol === 'admin') {
-            return res.status(403).json({ message: 'Acceso denegado: No puedes registrar otro administrador.' })
+        if (userExists) {
+            throw new Error('Usuario existente')
         }
 
         const hashPassword = await encrypt(password)
@@ -69,16 +51,27 @@ AuthService.register = async (dni, name, email, password, rol) => {
             name,
             email,
             password: hashPassword,
-            rol: 'user'
+            rol
         })
 
-        await newUser.save()
+        const user = await newUser.save()
+
+        return {
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                dni: user.dni,
+                rol: user.rol
+            },
+            message: 'Usuario creado exitosamente'
+        }
     } catch (error) {
-        return res.status(400).json({ message: error.message })
+        throw new Error(error.message)
     }
 }
 
-AuthService.profile = async (id) => {
+AuthService.profile = async id => {
     const user = await User.findById(req.userId)
 
     if (!user) {
@@ -94,4 +87,4 @@ AuthService.profile = async (id) => {
     }
 }
 
-export default AuthService;
+export default AuthService
