@@ -29,6 +29,8 @@ paths:
                                             id:
                                                 type: integer
                                                 example: 66eb8d882549b1aa5ba94567
+                                            dni: 
+                                                type: string
                                             name:
                                                 type: string
                                                 example: John Doe
@@ -54,6 +56,8 @@ paths:
                         schema:
                             type: object
                             properties:
+                                dni: 
+                                    type: string
                                 name:
                                     type: string
                                     description: Nombre del usuario
@@ -72,6 +76,7 @@ paths:
                                     description: Rol del usuario
                                     example: user
                             required:
+                                - dni
                                 - name
                                 - email
                                 - password
@@ -90,7 +95,7 @@ paths:
                         schema:
                             type: object
                             properties:
-                                email:
+                                dni:
                                     type: string
                                 password:
                                     type: string
