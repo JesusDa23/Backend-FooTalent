@@ -37,8 +37,10 @@ AuthService.login = async (dni, password) => {
 AuthService.register = async (dni, name, email, password, rol) => {
     try {
         const userCount = await User.countDocuments()
+
         if (userCount === 0) rol = 'admin'
-        const userExists = await User.findOne({ email })
+
+        const userExists = await User.findOne({ dni })
 
         if (userExists) {
             throw new Error('Usuario existente')
@@ -59,9 +61,9 @@ AuthService.register = async (dni, name, email, password, rol) => {
         return {
             user: {
                 id: user.id,
+                dni: user.dni,
                 name: user.name,
                 email: user.email,
-                dni: user.dni,
                 rol: user.rol
             },
             message: 'Usuario creado exitosamente'
@@ -71,7 +73,7 @@ AuthService.register = async (dni, name, email, password, rol) => {
     }
 }
 
-AuthService.profile = async id => {
+AuthService.profile = async (id) => {
     const user = await User.findById(req.userId)
 
     if (!user) {
