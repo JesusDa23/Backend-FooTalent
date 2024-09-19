@@ -1,8 +1,9 @@
 import express from 'express'
 import cors from 'cors'
-import IndexRoutes from './routes/index.routes.js'
 import morgan from 'morgan'
+import IndexRoutes from './routes/index.routes.js'
 import './models/index.model.js'
+
 const app = express()
 
 app.use(cors())

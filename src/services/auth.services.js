@@ -4,20 +4,27 @@ import { encrypt, verified } from '../utils/bcryp.handler.js'
 
 const AuthService = {}
 
-AuthService.login = async (email, password) => {
-    const user = await User.findOne({ email })
+AuthService.login = async (dni, password) => {
+    const user = await User.findOne({ dni })
+
     if (!user) {
         throw new Error('Usuario no encontrado')
     }
+
     const isCorrect = await verified(password, user.password)
+
     if (!isCorrect) {
         throw new Error('Invalid credentials')
     }
+
     const token = createToken({ id: user.id, rol: user.rol })
+
     console.log(user)
+
     return {
         user: {
             id: user.id,
+            dni: user.dni,
             name: user.name,
             email: user.email,
             rol: user.rol
@@ -27,38 +34,51 @@ AuthService.login = async (email, password) => {
     }
 }
 
-AuthService.register = async (name, email, password, rol) => {
-    const userExists = await User.findOne({ email })
+AuthService.register = async (dni, name, email, password, rol) => {
+    try {
+        const userCount = await User.countDocuments()
 
-    if (userExists) {
-        throw new Error('Usuario existente')
-    }
+        if (userCount === 0) {
+            const hashPassword = await encrypt(password)
 
-    const hashPassword = await encrypt(password)
+            const adminPrincipal = new User({
+                dni,
+                name,
+                email,
+                password: hashPassword,
+                rol
+            })
 
-    const newUser = new User({
-        name,
-        email,
-        password: hashPassword,
-        rol
-    })
+            await adminPrincipal.save()
+        }
 
-    const user = await newUser.save()
+        const { rol: currentUserRole } = req.user
 
-    const token = createToken({ id: user.id, rol: user.rol })
-    return {
-        user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            rol: user.rol
-        },
-        token,
-        message: 'Usuario creado exitosamente'
+        if (currentUserRole !== 'admin') {
+            return res.status(403).json({ message: 'Acceso denegado: Solo los administradores pueden registrar usuarios.' })
+        }
+
+        if (rol === 'admin') {
+            return res.status(403).json({ message: 'Acceso denegado: No puedes registrar otro administrador.' })
+        }
+
+        const hashPassword = await encrypt(password)
+
+        const newUser = new User({
+            dni,
+            name,
+            email,
+            password: hashPassword,
+            rol: 'user'
+        })
+
+        await newUser.save()
+    } catch (error) {
+        return res.status(400).json({ message: error.message })
     }
 }
 
-AuthService.profile = async id => {
+AuthService.profile = async (id) => {
     const user = await User.findById(req.userId)
 
     if (!user) {
@@ -67,10 +87,11 @@ AuthService.profile = async id => {
 
     return {
         id: user.id,
+        dni: user.dni,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.rol
     }
 }
 
-export default AuthService
+export default AuthService;

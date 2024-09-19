@@ -2,11 +2,8 @@ import { Router } from 'express'
 import Auth from '../controllers/auth.controller.js'
 import { checkAdminRole } from '../middlewares/validate-role.js'
 import { validateJWT } from '../middlewares/validate-jwt.js'
-const router = Router()
 
-router.get('/', (req, res) => {
-    res.send('Hello from getUser')
-})
+const router = Router()
 
 router.post('/login', Auth.login)
 router.post('/register', validateJWT, checkAdminRole, Auth.register)
