@@ -47,6 +47,8 @@ paths:
                 500:
                     description: Usuario existente
             requestBody:
+                description: Datos del usuario a registrar
+                required: true
                 content:
                     application/json:
                         schema:
@@ -54,13 +56,21 @@ paths:
                             properties:
                                 name:
                                     type: string
+                                    description: Nombre del usuario
+                                    example: John Doe
                                 email:
                                     type: string
+                                    description: Correo del usuario
+                                    example: email@gmail.com
                                 password:
                                     type: string
+                                    description: Contraseña del usuario
+                                    example: password
                                 rol:
                                     type: enum
                                     enum: [admin, user]
+                                    description: Rol del usuario
+                                    example: user
                             required:
                                 - name
                                 - email

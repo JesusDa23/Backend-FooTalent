@@ -9,7 +9,7 @@ const swaggerOptions = {
             version: '1.0.0',
             description: 'API para la gestion de flota de vehiculos',
             contact: {
-                name: 'Javier',
+                name: 'dev',
                 email: ''
             }
         },
