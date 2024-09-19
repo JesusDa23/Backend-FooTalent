@@ -8,3 +8,4 @@ export const configCloudinary = {
 
 export const NODEMAILER_PASS = process.env.NODEMAILER_PASS
 export const DB_URI = process.env.DB_URI
+export const EMAIL_NOTIFICATION = process.env.EMAIL_NOTIFICATION
