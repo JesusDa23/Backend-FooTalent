@@ -1,8 +1,9 @@
 import { connect } from 'mongoose'
-
+import { DB_URI } from './config/env.config.js'
 export async function connectToDatabase() {
+    console.log('Conectando a MongoDB Atlas...')
     try {
-        await connect(process.env.DB_URI)
+        await connect(DB_URI)
 
         console.log('Conexión a MongoDB Atlas establecida con éxito!')
     } catch (err) {
