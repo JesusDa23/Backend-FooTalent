@@ -19,7 +19,7 @@ const swaggerOptions = {
                 description: 'Development server'
             },
             {
-                url: 'https://api.footalent.com',
+                url: 'https://backend-footalent.onrender.com',
                 description: 'Production server'
             }
         ],
