@@ -1,6 +1,5 @@
 import AuthService from '../services/auth.services.js'
 import NotificationController from './notification.controller.js'
-
 const Auth = {}
 
 Auth.login = async (req, res) => {
@@ -28,7 +27,6 @@ Auth.register = async (req, res) => {
             'Bienvenido a Footalent',
             'Gracias por registrarte en Footalent'
         )
-
         res.status(201).json(user)
     } catch (error) {
         res.status(500).json({ error: error.message })
