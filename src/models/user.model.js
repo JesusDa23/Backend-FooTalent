@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 
 const userSchema = new Schema(
     {
-        username: {
+        name: {
             type: String,
             required: true,
             trim: true
@@ -19,7 +19,7 @@ const userSchema = new Schema(
         rol: {
             type: String,
             required: true,
-            enum: ['admin', 'user,'],
+            enum: ['admin', 'user'],
             default: 'user'
         }
     },
