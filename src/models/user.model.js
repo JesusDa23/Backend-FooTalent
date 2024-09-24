@@ -4,6 +4,7 @@ const userSchema = new Schema({
     dni: {
         type: String,
         required: true,
+        unique: true,
         trim: true
     },
     name: {
@@ -13,7 +14,9 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        select: false
     },
     email: {
         type: String,

@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose'
 
-// Esquema del checklist
 const checklistCamionetaSchema = new Schema({
     tipoVehiculo: { type: String, required: true },
     area: { type: String, required: true },
