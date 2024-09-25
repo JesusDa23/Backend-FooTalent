@@ -1,5 +1,5 @@
 import AuthService from '../services/auth.services.js'
-import NotificationController from './notification.controller.js'
+import { sendEmail } from './notification.controller.js';
 const Auth = {}
 
 Auth.login = async (req, res) => {
@@ -22,7 +22,7 @@ Auth.register = async (req, res) => {
     try {
         const user = await AuthService.register(dni, name, email, password, rol)
 
-        NotificationController.sendEmail(
+        await sendEmail(
             email,
             'Bienvenido a Footalent',
             'Gracias por registrarte en Footalent'
