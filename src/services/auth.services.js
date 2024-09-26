@@ -5,21 +5,16 @@ import { encrypt, verified } from '../utils/bcryp.handler.js'
 const AuthService = {}
 
 AuthService.login = async (dni, password) => {
-    const user = await User.findOne({ dni })
-
+    const user = await User.findOne({ dni }).select('+password')
     if (!user) {
         throw new Error('Usuario no encontrado')
     }
-
     const isCorrect = await verified(password, user.password)
-
     if (!isCorrect) {
         throw new Error('Invalid credentials')
     }
 
     const token = createToken({ id: user.id, rol: user.rol })
-
-    console.log(user)
 
     return {
         user: {
@@ -73,7 +68,7 @@ AuthService.register = async (dni, name, email, password, rol) => {
     }
 }
 
-AuthService.profile = async (id) => {
+AuthService.profile = async id => {
     const user = await User.findById(req.userId)
 
     if (!user) {

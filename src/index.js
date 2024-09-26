@@ -8,5 +8,5 @@ await connectToDatabase()
 app.listen(process.env.AppPort, (res, error) => {
     console.log('Server running at http://localhost:' + process.env.AppPort)
     swaggerDocs(app)
-    executeRegister()
+    // executeRegister()
 })
