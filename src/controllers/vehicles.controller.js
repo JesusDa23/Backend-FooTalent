@@ -117,7 +117,7 @@ vehicles.update = async (req, res) => {
 vehicles.delete = async (req, res) => {
     try {
       // Extract the vehicle ID from the request parameters
-      const { id } = req.body;
+      const { id } = req.params;
   
       // Check if the vehicle ID is provided
       if (!id) {

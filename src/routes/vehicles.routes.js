@@ -9,6 +9,6 @@ router.post("/save",Vehicles.create)
 router.get("/rtv",Vehicles.list)
 router.get("/rtv/:id",Vehicles.list)
 router.put("/update",Vehicles.update)
-router.delete("/del",Vehicles.delete)
+router.delete("/del/:id",Vehicles.delete)
 
 export default router 
