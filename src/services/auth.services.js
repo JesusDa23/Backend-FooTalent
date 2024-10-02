@@ -4,8 +4,8 @@ import { encrypt, verified } from '../utils/bcryp.handler.js'
 
 const AuthService = {}
 
-AuthService.login = async (dni, password) => {
-    const user = await User.findOne({ dni }).select('+password')
+AuthService.login = async (email, password) => {
+    const user = await User.findOne({ email }).select('+password')
     if (!user) {
         throw new Error('Usuario no encontrado')
     }

@@ -5,9 +5,9 @@ import User from '../models/user.model.js'
 const Auth = {}
 
 Auth.login = async (req, res) => {
-    const { dni, password } = req.body
+    const { email, password } = req.body
     try {
-        const user = await AuthService.login(dni, password)
+        const user = await AuthService.login(email, password)
 
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' })
