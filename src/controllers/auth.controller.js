@@ -1,5 +1,7 @@
 import AuthService from '../services/auth.services.js'
 import NotificationController from './notification.controller.js'
+import User from '../models/user.model.js'
+
 const Auth = {}
 
 Auth.login = async (req, res) => {
@@ -45,5 +47,17 @@ Auth.profile = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+Auth.getUsers = async (req, res) => {
+    try {
+        const allUsers = await User.find();
+        res.json({
+            data: allUsers
+        });
+    } catch (error) {
+        respuesta.json(error);
+    }
+}
+
 
 export default Auth
