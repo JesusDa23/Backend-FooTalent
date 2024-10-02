@@ -1,6 +1,5 @@
 import Vehicle from '../models/vehicle.model.js';  // Import the Vehicle model
 
-
 const vehicles = {}
 
 vehicles.create = async (req, res) => {
@@ -81,7 +80,7 @@ vehicles.list = async (req, res) => {
 vehicles.update = async (req, res) => {
   try {
     // Extract the vehicle ID from the request parameters
-    const { id } = req.body;
+    const { id } = req.params;
 
     // Check if the vehicle ID is provided
     if (!id) {
@@ -117,7 +116,7 @@ vehicles.update = async (req, res) => {
 vehicles.delete = async (req, res) => {
     try {
       // Extract the vehicle ID from the request parameters
-      const { id } = req.body;
+      const { id } = req.params;
   
       // Check if the vehicle ID is provided
       if (!id) {

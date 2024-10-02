@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 
-const checklistBusSchema = new Schema({
+const checklistVehiculoSchema = new Schema({
     tipoVehiculo: { type: String, required: true },
     area: { type: String, required: true },
     placa: { type: String, required: true },
@@ -10,6 +10,15 @@ const checklistBusSchema = new Schema({
     horaInspeccion: { type: String, required: true },
     kmInicial: { type: Number, required: true },
     kmFinal: { type: Number, required: true },
+    TipoConsumo: { 
+        type: String, 
+        enum: ['Gas', 'Gasolina', 'Electrico'],
+        required: true
+    },
+    AsientoTrasero: { 
+        type: Boolean, 
+        required: true
+    },
     sistemaLuces: {
         luzDelanteraAlta: {
             type: String,
@@ -26,11 +35,6 @@ const checklistBusSchema = new Schema({
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        lucesNeblineros: {
-            type: String,
-            enum: ['B', 'M', 'NA'],
-            required: true
-        },
         lucesDireccionalesDelanteras: {
             type: String,
             enum: ['B', 'M', 'NA'],
@@ -41,10 +45,19 @@ const checklistBusSchema = new Schema({
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        lucesSalon: { type: String, enum: ['B', 'M', 'NA'], required: true }
+        luzReversa: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+            required: true
+        },
+        lucesdeFrenoPosterior: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'], 
+            required: true 
+        }
     },
     parteExterna: {
-        parabrisasDelantera: {
+        parabrisasDelantero: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
@@ -54,17 +67,27 @@ const checklistBusSchema = new Schema({
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        vidriosVentanas: {
+        limpiaparabrisas: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        espejosLaterales: {
+        sapitos: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        tapaTanqueCombustible: {
+        niveldeagua: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+            required: true
+        },
+        niveldeAceite: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+            required: true
+        },
+        perdidadeFluidosPavimento: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
@@ -76,7 +99,11 @@ const checklistBusSchema = new Schema({
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        frenoMano: { type: String, enum: ['B', 'M', 'NA'], required: true },
+        frenoMano: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'], 
+            required: true 
+        },
         frenoServicio: {
             type: String,
             enum: ['B', 'M', 'NA'],
@@ -87,7 +114,16 @@ const checklistBusSchema = new Schema({
             enum: ['B', 'M', 'NA'],
             required: true
         },
+        cinturonCopiloto: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+        },
         cinturonPasajeros: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+            required: true
+        },
+        espejoRetrovisor: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
@@ -97,16 +133,18 @@ const checklistBusSchema = new Schema({
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        direccion: { type: String, enum: ['B', 'M', 'NA'], required: true },
-        claxon: { type: String, enum: ['B', 'M', 'NA'], required: true },
-        asientos: { type: String, enum: ['B', 'M', 'NA'], required: true },
-        lucesSalonPasajeros: {
+        direccion: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'], 
+            required: true 
+        },
+        suspension: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
         }
     },
-    estadoLlantas: {
+    estadoCubiertas: {
         llantaDelanteraDerecha: {
             type: String,
             enum: ['B', 'M', 'NA'],
@@ -131,6 +169,11 @@ const checklistBusSchema = new Schema({
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
+        },
+        presionNeumaticos: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+            required: true
         }
     },
     accesoriosSeguridad: {
@@ -139,28 +182,24 @@ const checklistBusSchema = new Schema({
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        extintor: { type: String, enum: ['B', 'M', 'NA'], required: true },
-        gataHidraulica: {
+        extintor: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'], 
+            required: true 
+        },
+        alarmaRetroceso: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        cableCadenaEstrobo: {
+        bosina: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        cuñasSeguridad: {
-            type: String,
-            enum: ['B', 'M', 'NA'],
-            required: true
-        },
-        herramientasPalancaRuedas: {
-            type: String,
-            enum: ['B', 'M', 'NA'],
-            required: true
-        },
-        botiquin: { type: String, enum: ['B', 'M', 'NA'], required: true },
+
+        
+        
         radioComunicacion: {
             type: String,
             enum: ['B', 'M', 'NA'],
@@ -172,17 +211,51 @@ const checklistBusSchema = new Schema({
             required: true
         }
     },
+    tapasyOtros:{
+        
+        tapaTanqueGasolina: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+            required: true
+        },
+        
+        gataHidraulica: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+            required: true
+        },
+        herramientasPalancaRuedas: {
+            type: String,
+            enum: ['B', 'M', 'NA'],
+            required: true
+        },
+        cablePasaCorriente: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'], 
+            required: true 
+        },
+        eslingasZunchos: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'], 
+            required: true 
+        },
+        OtrasHerramientas: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'], 
+            required: true 
+        },
+    },
+
     documentacion: {
         tarjetaPropiedad: {
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
         },
-        SOAT: { type: String, enum: ['B', 'M', 'NA'], required: true },
-        inspeccionTecnicaVehicular: {
-            type: String,
-            enum: ['B', 'M', 'NA'],
-            required: true
+        PapelesSeguro: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'], 
+            required: true 
         },
         autorizacionTransito: {
             type: String,
@@ -193,11 +266,15 @@ const checklistBusSchema = new Schema({
             type: String,
             enum: ['B', 'M', 'NA'],
             required: true
-        }
+        },
+        tarjetaGNC: { 
+            type: String, 
+            enum: ['B', 'M', 'NA'],  
+        },
     },
     observaciones: { type: String, default: '' },
     choquesYRaspaduras: { type: String, default: '' },
     afirmacion: { type: Boolean, default: false }
 }, { timestamps: true })
 
-export default model('ChecklistBus', checklistBusSchema)
+export default model('ChecklistVehiculo', checklistVehiculoSchema)
