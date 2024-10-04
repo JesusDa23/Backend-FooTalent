@@ -11,10 +11,10 @@ AuthService.login = async (email, password) => {
     }
     const isCorrect = await verified(password, user.password)
     if (!isCorrect) {
-        throw new Error('Invalid credentials')
+        throw new Error('Contraseña incorrecta')
     }
 
-    const token = createToken({ id: user.id, rol: user.rol })
+    const token = createToken({ email: user.email, rol: user.rol })
 
     return {
         user: {
@@ -68,8 +68,10 @@ AuthService.register = async (dni, name, email, password, rol) => {
     }
 }
 
-AuthService.profile = async id => {
-    const user = await User.findById(req.userId)
+AuthService.profile = async (email) => {
+    // const user = await User.findById(req.userId)
+    // ? Por qué no se usa el id que se recibe como parametro?
+    const user = await User.findById(email)
 
     if (!user) {
         throw new Error('User not found')

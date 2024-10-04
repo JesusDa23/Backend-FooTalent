@@ -40,8 +40,9 @@ Auth.logout = async (req, res) => {
 }
 
 Auth.profile = async (req, res) => {
+    console.log(req)
     try {
-        const user = await AuthService.profile(req.user.id)
+        const user = await AuthService.profile(req.user.email)
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({ error: error.message })
