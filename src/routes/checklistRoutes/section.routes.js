@@ -10,4 +10,5 @@ router.put('/sections/:id', section.updateSection);
 router.delete('/sections/:id', section.deleteSection);
 router.get('/sections/category/:categoryId', section.getSectionsByCategory);
 
+
 export default router

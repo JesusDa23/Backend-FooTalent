@@ -5,38 +5,25 @@ const bullet = {}
 // Create and Save a new Bullet
 bullet.createBullet = async (req, res) => {
     try {
+        const { sectionId, description, requerido } = req.body;
 
-        console.log("resultado body:",req.body)
         // Validate request
-        if (!req.body.section || !req.body.description || !req.body.requerido) {
+        if (!req.body.description) {
             return res.status(400).send({
                 message: "Section, description, and requerido cannot be empty"
             });
         }
-
-        // Check if the section exists
-        const section = await Section.findById(req.body.section);
-        if (!section) {
-            return res.status(404).send({
-                message: "Section not found"
-            });
+        else {
+            const newBullet = new Bullet({ section: sectionId, description, requerido });
+            await newBullet.save();
+            res.status(201).json(newBullet);
         }
 
-        // Create a Bullet
-        const bullet = new Bullet({
-            section: req.body.section,
-            description: req.body.description,
-            requerido: req.body.requerido
-        });
-
-        // Save Bullet in the database
-        const savedBullet = await bullet.save();
-        res.status(201).send(savedBullet);
     } catch (error) {
-        res.status(500).send({
-            message: error.message || "Some error occurred while creating the Bullet."
-        });
+        console.error('Error creating bullet:', error);
+        res.status(500).json({ message: 'Error creating bullet', error });
     }
+
 };
 
 // Retrieve all Bullets
@@ -85,9 +72,7 @@ bullet.updateBullet = async (req, res) => {
         const updatedBullet = await Bullet.findByIdAndUpdate(
             req.params.id,
             {
-                section: req.body.section,
                 description: req.body.description,
-                requerido: req.body.requerido
             },
             { new: true }
         );
@@ -114,24 +99,73 @@ bullet.updateBullet = async (req, res) => {
 // Delete a Bullet
 bullet.deleteBullet = async (req, res) => {
     try {
-        const deletedBullet = await Bullet.findByIdAndRemove(req.params.id);
+        const bulletId = req.params.id;
+        console.log("Item to delete:", bulletId);
+        // Proceed to delete
+        const deletedBullet = await Bullet.findByIdAndDelete(bulletId);
 
+        // If deletedBullet is still undefined after trying to remove
         if (!deletedBullet) {
             return res.status(404).send({
-                message: `Bullet not found with id ${req.params.id}`
+                message: `Bullet not found with id ${bulletId}`
             });
         }
 
         res.status(200).send({ message: "Bullet deleted successfully!" });
     } catch (error) {
-        if (error.kind === 'ObjectId') {
+        console.error("Error deleting bullet:", error);  // Log the actual error
+
+        // Handle incorrect ObjectId errors
+        if (error.kind === 'ObjectId' || error.name === 'CastError') {
             return res.status(404).send({
                 message: `Bullet not found with id ${req.params.id}`
             });
         }
+
         res.status(500).send({
             message: `Could not delete bullet with id ${req.params.id}`
         });
+    }
+};
+
+bullet.getBulletsBySection = async (req, res) => {
+    try {
+        const { sectionId } = req.params;
+
+        // Find bullets where the section matches the provided sectionId
+        const bullets = await Bullet.find({ section: sectionId });
+
+        if (!bullets || bullets.length === 0) {
+            return res.status(304).json({ message: 'No bullets found for this section' });
+        }
+
+        // Return the bullets
+        res.status(200).json(bullets);
+    } catch (error) {
+        console.error('Error fetching bullets:', error);
+        res.status(500).json({ message: 'Error fetching bullets', error });
+    }
+}
+
+bullet.updateRequeridoStatus = async (req, res) => {
+    try {
+        const { bulletId } = req.params;
+        const { requerido } = req.body; // Expected to receive the new "requerido" value
+
+        const updatedBullet = await Bullet.findByIdAndUpdate(
+            bulletId,
+            { requerido },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedBullet) {
+            return res.status(404).json({ message: 'Bullet not found' });
+        }
+
+        res.status(200).json(updatedBullet);
+    } catch (error) {
+        console.error('Error updating bullet:', error);
+        res.status(500).json({ message: 'Error updating bullet', error });
     }
 };
 
