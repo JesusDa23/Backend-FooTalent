@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { NODEMAILER_PASS, EMAIL_NOTIFICATION } from '../config/env.config.js'
+import { createToken } from '../utils/createToken.js'
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -14,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 const NotificationController = {
     sendEmail: async (email, subject, message) => {
-        console.log('INFO:', email, subject, message)
+        const linkVerify = await createToken({ email })
         const mailOptions = {
             from: `Footalent <${EMAIL_NOTIFICATION}>`,
             to: email,
@@ -22,6 +23,7 @@ const NotificationController = {
             html: `
                 <h1>${subject}</h1>
                 <p>${message}</p>
+                <a href="http://localhost:4200/auth/verify/${linkVerify}">Verificar cuenta</a>
             `
         }
         const infoNotification = await transporter.sendMail(mailOptions)
