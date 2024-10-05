@@ -8,5 +8,7 @@ router.get('/bullets', bullet.getAllBullets);
 router.get('/bullets/:id', bullet.getBulletById);
 router.put('/bullets/:id', bullet.updateBullet);
 router.delete('/bullets/:id', bullet.deleteBullet);
+router.get('/sections/:sectionId/bullets', bullet.getBulletsBySection);
+router.patch('/bullets/:bulletId/requerido', bullet.updateRequeridoStatus);
 
 export default router 

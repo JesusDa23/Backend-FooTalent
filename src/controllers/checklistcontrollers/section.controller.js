@@ -1,5 +1,6 @@
 import Section from '../../models/checklistmodels/section.model.js';
 import Category from '../../models/checklistmodels/category.model.js';
+import Bullet from '../../models/checklistmodels/bullet.model.js';
 
 const section = {}
 
@@ -137,11 +138,9 @@ section.deleteSection = async (req, res) => {
 section.getSectionsByCategory = async (req, res) => {
     try {
         const { categoryId } = req.params;
-        console.log('aqui esta:',categoryId)
 
         // Query the database for sections that match the category ID
         const sections = await Section.find({ category: categoryId }).populate('category');
-        console.log('Queried sections:', sections);
         
         // Check if sections exist for the given category
         if (!sections || sections.length === 0) {
@@ -155,6 +154,5 @@ section.getSectionsByCategory = async (req, res) => {
         res.status(500).json({ message: 'Error fetching sections', error });
     }
 };
-
 
 export default section

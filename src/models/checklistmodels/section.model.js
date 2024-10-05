@@ -9,7 +9,11 @@ const sectionSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: true
-    }
+    },
+    bullets: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Bullet'
+    }]
 });
 
 export default model('Section', sectionSchema);
