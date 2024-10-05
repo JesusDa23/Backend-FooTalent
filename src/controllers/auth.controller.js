@@ -1,11 +1,13 @@
 import AuthService from '../services/auth.services.js'
 import NotificationController from './notification.controller.js'
+import User from '../models/user.model.js'
+
 const Auth = {}
 
 Auth.login = async (req, res) => {
-    const { dni, password } = req.body
+    const { email, password } = req.body
     try {
-        const user = await AuthService.login(dni, password)
+        const user = await AuthService.login(email, password)
 
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' })
@@ -38,12 +40,25 @@ Auth.logout = async (req, res) => {
 }
 
 Auth.profile = async (req, res) => {
+    console.log(req)
     try {
-        const user = await AuthService.profile(req.user.id)
+        const user = await AuthService.profile(req.user.email)
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
 }
+
+Auth.getUsers = async (req, res) => {
+    try {
+        const allUsers = await User.find();
+        res.json({
+            data: allUsers
+        });
+    } catch (error) {
+        respuesta.json(error);
+    }
+}
+
 
 export default Auth

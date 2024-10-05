@@ -1,7 +1,7 @@
 import app from './app.js'
 import { connectToDatabase } from './db.js'
 import { swaggerDocs } from './docs.js'
-// import executeRegister from './utils/executeRegister.js'
+import executeRegister from './utils/executeRegister.js'
 
 await connectToDatabase()
 

@@ -1,3 +1,3 @@
 import User from './user.model.js'
-import ChecklistBus from './checkListBus.model.js'
+import ChecklistVehiculo from './checkListVehiculo.model.js'
 import ChecklistCamioneta from './checkListCamioneta.model.js'

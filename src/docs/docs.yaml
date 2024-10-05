@@ -10,7 +10,7 @@ components:
             name: 'mysecret'
 
 paths:
-    /api/auth/register:
+    /api/v1/auth/register:
         post:
             tags:
                 - Auth
@@ -29,8 +29,9 @@ paths:
                                             id:
                                                 type: integer
                                                 example: 66eb8d882549b1aa5ba94567
-                                            dni: 
+                                            dni:
                                                 type: string
+                                                example: 12.345.678
                                             name:
                                                 type: string
                                                 example: John Doe
@@ -56,8 +57,10 @@ paths:
                         schema:
                             type: object
                             properties:
-                                dni: 
+                                dni:
                                     type: string
+                                    description: DNI del usuario
+                                    example: 12.345.678
                                 name:
                                     type: string
                                     description: Nombre del usuario
@@ -80,7 +83,7 @@ paths:
                                 - name
                                 - email
                                 - password
-    /api/auth/login:
+    /api/v1/auth/login:
         post:
             tags:
                 - Auth

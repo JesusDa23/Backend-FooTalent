@@ -4,22 +4,17 @@ import { encrypt, verified } from '../utils/bcryp.handler.js'
 
 const AuthService = {}
 
-AuthService.login = async (dni, password) => {
-    const user = await User.findOne({ dni })
-
+AuthService.login = async (email, password) => {
+    const user = await User.findOne({ email }).select('+password')
     if (!user) {
         throw new Error('Usuario no encontrado')
     }
-
     const isCorrect = await verified(password, user.password)
-
     if (!isCorrect) {
-        throw new Error('Invalid credentials')
+        throw new Error('Contraseña incorrecta')
     }
 
-    const token = createToken({ id: user.id, rol: user.rol })
-
-    console.log(user)
+    const token = createToken({ email: user.email, rol: user.rol })
 
     return {
         user: {
@@ -37,8 +32,10 @@ AuthService.login = async (dni, password) => {
 AuthService.register = async (dni, name, email, password, rol) => {
     try {
         const userCount = await User.countDocuments()
+
         if (userCount === 0) rol = 'admin'
-        const userExists = await User.findOne({ email })
+
+        const userExists = await User.findOne({ dni })
 
         if (userExists) {
             throw new Error('Usuario existente')
@@ -59,9 +56,9 @@ AuthService.register = async (dni, name, email, password, rol) => {
         return {
             user: {
                 id: user.id,
+                dni: user.dni,
                 name: user.name,
                 email: user.email,
-                dni: user.dni,
                 rol: user.rol
             },
             message: 'Usuario creado exitosamente'
@@ -71,8 +68,10 @@ AuthService.register = async (dni, name, email, password, rol) => {
     }
 }
 
-AuthService.profile = async id => {
-    const user = await User.findById(req.userId)
+AuthService.profile = async (email) => {
+    // const user = await User.findById(req.userId)
+    // ? Por qué no se usa el id que se recibe como parametro?
+    const user = await User.findById(email)
 
     if (!user) {
         throw new Error('User not found')
