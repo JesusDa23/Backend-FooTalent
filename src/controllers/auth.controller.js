@@ -51,14 +51,13 @@ Auth.profile = async (req, res) => {
 
 Auth.getUsers = async (req, res) => {
     try {
-        const allUsers = await User.find();
+        const allUsers = await User.find()
         res.json({
             data: allUsers
-        });
+        })
     } catch (error) {
-        respuesta.json(error);
+        respuesta.json(error)
     }
 }
-
 
 export default Auth
