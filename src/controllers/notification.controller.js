@@ -15,7 +15,6 @@ const transporter = nodemailer.createTransport({
 
 const NotificationController = {
     sendEmail: async (email, subject, message) => {
-        const linkVerify = await createToken({ email })
         const mailOptions = {
             from: `Footalent <${EMAIL_NOTIFICATION}>`,
             to: email,
@@ -23,7 +22,21 @@ const NotificationController = {
             html: `
                 <h1>${subject}</h1>
                 <p>${message}</p>
-                <a href="http://localhost:4200/auth/verify/${linkVerify}">Verificar cuenta</a>
+            `
+        }
+        const infoNotification = await transporter.sendMail(mailOptions)
+        return infoNotification
+    },
+    sendEmailResetPassword: async (email, subject, message) => {
+        const linkReset = await createToken({ email })
+        const mailOptions = {
+            from: `Footalent <${EMAIL_NOTIFICATION}>`,
+            to: email,
+            subject,
+            html: `
+                <h1>${subject}</h1>
+                <p>${message}</p>
+                <a href="http://localhost:4200/auth/reset-password/${linkReset}">Resetear contraseña</a>
             `
         }
         const infoNotification = await transporter.sendMail(mailOptions)
