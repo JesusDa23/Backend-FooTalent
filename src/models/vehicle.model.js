@@ -1,4 +1,5 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
+
 
 // Define the vehicle schema
 const vehicleSchema = new Schema({
@@ -36,13 +37,18 @@ const vehicleSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['available', 'sold', 'maintenance'], // Vehicle status options
-    default: 'available',  // Default status is 'available'
+    enum: ['Ocupado', 'Disponible', 'Reparacion', 'Deshabilitado' ], // Vehicle status options
+    default: 'Disponible',  // Default status is 'available'
   },
   createdAt: {
     type: Date,
     default: Date.now  // Automatically set the date when the vehicle is added
-  }
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: false
+  },
 });
 
 

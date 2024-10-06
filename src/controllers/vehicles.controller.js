@@ -5,7 +5,7 @@ const vehicles = {}
 vehicles.create = async (req, res) => {
     try {
       // Get vehicle data from the request body
-      const { make, model, year, vin, plate, color, mileage, owner, status} = req.body;
+      const { make, model, year, vin, plate, color, mileage, status, category} = req.body;
   
       // Validate that required fields are provided
       if (!make || !model || !year || !vin || !plate) {
@@ -21,8 +21,8 @@ vehicles.create = async (req, res) => {
         plate,
         color,
         mileage,
-        owner,
         status,
+        category,
       });
   
       // Save the vehicle to the database
