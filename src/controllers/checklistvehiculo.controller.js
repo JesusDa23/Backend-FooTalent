@@ -1,4 +1,6 @@
 import ChecklistVehiculo from '../models/checkListVehiculo.model.js';
+import FormResponse from '../models/FormResponse.model.js';
+import Usersubmission from '../models/LastSubmission.model.js'
 
 
 const checklist = {}
@@ -147,5 +149,69 @@ checklist.deleteChecklist = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+checklist.listforms = async (req, res) => {
+    try {
+        const inspections = await Inspection.find();
+        res.status(200).send(inspections);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send({ message: 'Error fetching data', error });
+    }
+}
+
+checklist.listformsave = async (req, res) => {
+
+    try {
+        const type = req.body.submissionType
+        const userId = req.body.user.id
+        // Fetch the last submission for the user
+        const lastSubmission = await Usersubmission.findOne({ userId }).sort({ submissionTime: -1 });
+    
+        // Get the current time and the last submission time
+        const now = new Date();
+        const threeMinutesAgo = new Date(now.getTime() - 3 * 60 * 1000);
+    
+        if (lastSubmission && lastSubmission.submissionTime >= threeMinutesAgo) {
+          // If last submission is within 3 minutes, do not allow new submission
+          console.log('You can only submit once every 3 minutes. Please wait.');
+          return {
+            success: false,
+            message: 'You can only submit once every 3 minutes. Please wait.',
+          };
+        }
+        const updatesubmission = new Usersubmission({
+            userId,
+            submissionType: type,
+            submissionTime: new Date(),
+          });
+        await updatesubmission.save();
+    
+        // Proceed to save the new submission if allowed
+        const newSubmission = new FormResponse({
+          userId,
+          submissionType: type, // Ensure you have this in your form data
+          sections: req.body.sections, // Form data to save
+          submissionTime: new Date(),
+        });
+    
+        // Save the submission to the database
+        await newSubmission.save();
+    
+        console.log('Submission saved successfully:', newSubmission);
+        return {
+          success: true,
+          message: 'Submission saved successfully!',
+          submission: newSubmission,
+        };
+      } catch (error) {
+        console.error('Error saving submission:', error);
+        return {
+          success: false,
+          message: 'Internal server error',
+          error: error.message,
+        };
+      }
+}
 
 export default checklist

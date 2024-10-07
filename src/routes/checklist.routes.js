@@ -19,4 +19,8 @@ router.put('/:id', checklist.updateChecklist);
 // Delete a checklist by ID
 router.delete('/del/:id', checklist.deleteChecklist);
 
+router.get('/inspectionForms', checklist.listforms);
+
+router.post('/inspectionForms', checklist.listformsave);
+
 export default router;
