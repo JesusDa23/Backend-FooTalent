@@ -4,7 +4,7 @@ import category from '../../controllers/checklistcontrollers/category.controller
 const router = express.Router();
 
 router.post('/categories', category.createCategory);
-router.get('/categories', category.getAllCategories);
+router.get('/getCategories', category.getAllCategories);
 router.get('/categories/:id', category.getCategoryById);
 router.put('/categories/:id', category.updateCategory);
 router.delete('/categories/:id', category.deleteCategory);
