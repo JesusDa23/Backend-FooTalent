@@ -152,7 +152,7 @@ checklist.deleteChecklist = async (req, res) => {
 
 checklist.listforms = async (req, res) => {
     try {
-        const inspections = await Inspection.find();
+        const inspections = await FormResponse.find();
         res.status(200).send(inspections);
     } catch (error) {
         console.error('Error fetching data:', error);
