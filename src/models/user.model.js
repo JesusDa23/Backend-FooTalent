@@ -24,6 +24,11 @@ const userSchema = new Schema(
             required: true,
             unique: true
         },
+        phone: {
+            type: String,
+            required: true,
+            unique: true
+        },
         rol: {
             type: String,
             required: true,

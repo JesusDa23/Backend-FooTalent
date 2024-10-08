@@ -20,9 +20,9 @@ Auth.login = async (req, res) => {
 }
 
 Auth.register = async (req, res) => {
-    const { dni, name, email, password, rol } = req.body
+    const { dni, name, email, phone, password, rol } = req.body
     try {
-        const user = await AuthService.register(dni, name, email, password, rol)
+        const user = await AuthService.register(dni, name, email, phone, password, rol)
 
         NotificationController.sendEmail(
             email,

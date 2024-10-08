@@ -22,6 +22,7 @@ AuthService.login = async (dni, password) => {
             dni: user.dni,
             name: user.name,
             email: user.email,
+            phone: user.phone,
             rol: user.rol
         },
         token,
@@ -29,7 +30,7 @@ AuthService.login = async (dni, password) => {
     }
 }
 
-AuthService.register = async (dni, name, email, password, rol) => {
+AuthService.register = async (dni, name, email, phone, password, rol) => {
     try {
         const userCount = await User.countDocuments()
 
@@ -47,6 +48,7 @@ AuthService.register = async (dni, name, email, password, rol) => {
             dni,
             name,
             email,
+            phone,
             password: hashPassword,
             rol
         })
@@ -59,6 +61,7 @@ AuthService.register = async (dni, name, email, password, rol) => {
                 dni: user.dni,
                 name: user.name,
                 email: user.email,
+                phone: user.phone,
                 rol: user.rol
             },
             message: 'Usuario creado exitosamente'
@@ -82,6 +85,7 @@ AuthService.profile = async (email) => {
         dni: user.dni,
         name: user.name,
         email: user.email,
+        phone: user.phone,
         role: user.rol
     }
 }

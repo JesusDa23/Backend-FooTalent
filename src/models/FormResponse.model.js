@@ -6,6 +6,7 @@ const FormResponseSchema = new Schema({
         dni: String,
         name: String,
         email: String,
+        phone: String,
         rol: String
     },
     vehicle: {
