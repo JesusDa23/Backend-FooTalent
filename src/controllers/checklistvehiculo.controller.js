@@ -165,7 +165,8 @@ checklist.listformsave = async (req, res) => {
     try {
         const type = req.body.submissionType
         const userId = req.body.user.id
-        // Fetch the last submission for the user
+        const user = req.body.user
+        const vehicle = req.body.vehicle
         const lastSubmission = await Usersubmission.findOne({ userId }).sort({ submissionTime: -1 });
     
         // Get the current time and the last submission time
@@ -181,6 +182,8 @@ checklist.listformsave = async (req, res) => {
           };
         }
         const updatesubmission = new Usersubmission({
+            vehicle,
+            user,
             userId,
             submissionType: type,
             submissionTime: new Date(),
@@ -189,10 +192,12 @@ checklist.listformsave = async (req, res) => {
     
         // Proceed to save the new submission if allowed
         const newSubmission = new FormResponse({
-          userId,
-          submissionType: type, // Ensure you have this in your form data
-          sections: req.body.sections, // Form data to save
-          submissionTime: new Date(),
+            vehicle,
+            user,
+            userId,
+            submissionType: type, // Ensure you have this in your form data
+            sections: req.body.sections, // Form data to save
+            submissionTime: new Date(),
         });
     
         // Save the submission to the database
