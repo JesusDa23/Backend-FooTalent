@@ -10,6 +10,6 @@ router.post('/register', validateJWT, checkAdminRole, Auth.register)
 router.get('/profile', validateJWT, Auth.profile)
 router.get('/users', validateJWT, Auth.getUsers)
 router.delete('/users/:dni', validateJWT, checkAdminRole, Auth.deleteUser)
-router.put('/users/:dni/password', validateJWT, Auth.UpdatePassword)
+router.put('/users/:dni/password', validateJWT, Auth.forgotPassword)
 
 export default router

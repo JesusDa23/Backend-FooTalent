@@ -1,6 +1,7 @@
 import AuthService from '../services/auth.services.js'
 import NotificationController from './notification.controller.js'
 import User from '../models/user.model.js'
+import { encrypt, verified } from '../utils/bcryp.handler.js'
 
 const Auth = {}
 
@@ -80,29 +81,15 @@ Auth.deleteUser = async (req, res) => {
     }
 };
 
-Auth.UpdatePassword = async (req, res) => {
-    const { dni } = req.params;
-    const { password } = req.body;
+Auth.forgotPassword = async (req, res) => {
+    const { dni } = req.params
+    const { oldPassword, newPassword } = req.body
 
     try {
-        const updatedUser = await User.findOneAndUpdate({ dni }, { password }, { new: true });
-
-        if (!updatedUser) {
-            return res.status(404).json({
-                message: 'Usuario no encontrado',
-            });
-        }
-
-        res.status(200).json({
-            message: 'Contraseña actualizada exitosamente',
-            data: updatedUser
-        });
-    }
-    catch (error) {
-        res.status(500).json({
-            message: 'Error al actualizar la contraseña',
-            error: error.message
-        })
+        const user = await AuthService.forgotPassword(dni, oldPassword, newPassword)
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 }
 
