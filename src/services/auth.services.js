@@ -1,7 +1,7 @@
 import User from '../models/user.model.js'
 import { createToken } from '../utils/createToken.js'
 import { encrypt, verified } from '../utils/bcryp.handler.js'
-
+import NotificationController from '../controllers/notification.controller.js'
 const AuthService = {}
 
 AuthService.login = async (dni, password) => {
@@ -36,12 +36,13 @@ AuthService.register = async (dni, name, email, phone, password, rol) => {
 
         if (userCount === 0) rol = 'admin'
 
-        const userExists = await User.findOne({ dni })
+        const userExists = await User.findOne({
+            $or: [{ dni }, { email }]
+        })
 
         if (userExists) {
             throw new Error('Usuario existente')
         }
-
         const hashPassword = await encrypt(password)
 
         const newUser = new User({
@@ -54,7 +55,11 @@ AuthService.register = async (dni, name, email, phone, password, rol) => {
         })
 
         const user = await newUser.save()
-
+        NotificationController.sendEmail(
+            email,
+            'Bienvenido a Fleet Management',
+            `Hola ${name}, te damos la bienvenida a nuestra plataforma. Tu contraseña provisional es: ${password}`
+        )
         return {
             user: {
                 id: user.id,
@@ -71,7 +76,7 @@ AuthService.register = async (dni, name, email, phone, password, rol) => {
     }
 }
 
-AuthService.profile = async (email) => {
+AuthService.profile = async email => {
     // const user = await User.findById(req.userId)
     // ? Por qué no se usa el id que se recibe como parametro?
     const user = await User.findById(email)
