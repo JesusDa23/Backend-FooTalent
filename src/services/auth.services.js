@@ -23,6 +23,9 @@ AuthService.login = async (dni, password) => {
             name: user.name,
             email: user.email,
             phone: user.phone,
+            address: user.address,
+            licencia: user.licencia,
+            isFirstLogin: user.isFirstLogin,
             rol: user.rol
         },
         token,
@@ -30,7 +33,8 @@ AuthService.login = async (dni, password) => {
     }
 }
 
-AuthService.register = async (dni, name, email, phone, password, rol) => {
+// aca agregue los datos adicionales que se estan pidiendo
+AuthService.register = async (dni, name, email, phone, password, licencia, address, isFirstLogin, rol) => {
     try {
         const userCount = await User.countDocuments()
 
@@ -49,6 +53,9 @@ AuthService.register = async (dni, name, email, phone, password, rol) => {
             name,
             email,
             phone,
+            licencia,
+            address,
+            isFirstLogin: true,
             password: hashPassword,
             rol
         })
@@ -62,6 +69,9 @@ AuthService.register = async (dni, name, email, phone, password, rol) => {
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
+                address: user.address,
+                licencia: user.licencia,
+                isFirstLogin: user.isFirstLogin,
                 rol: user.rol
             },
             message: 'Usuario creado exitosamente'
@@ -70,6 +80,48 @@ AuthService.register = async (dni, name, email, phone, password, rol) => {
         throw new Error(error.message)
     }
 }
+
+// Este es el servicio original, lo deje comentado por si acaso :v
+// AuthService.register = async (dni, name, email, phone, password, rol) => {
+//     try {
+//         const userCount = await User.countDocuments()
+
+//         if (userCount === 0) rol = 'admin'
+
+//         const userExists = await User.findOne({ dni })
+
+//         if (userExists) {
+//             throw new Error('Usuario existente')
+//         }
+
+//         const hashPassword = await encrypt(password)
+
+//         const newUser = new User({
+//             dni,
+//             name,
+//             email,
+//             phone,
+//             password: hashPassword,
+//             rol
+//         })
+
+//         const user = await newUser.save()
+
+//         return {
+//             user: {
+//                 id: user.id,
+//                 dni: user.dni,
+//                 name: user.name,
+//                 email: user.email,
+//                 phone: user.phone,
+//                 rol: user.rol
+//             },
+//             message: 'Usuario creado exitosamente'
+//         }
+//     } catch (error) {
+//         throw new Error(error.message)
+//     }
+// }
 
 AuthService.profile = async (email) => {
     // const user = await User.findById(req.userId)
