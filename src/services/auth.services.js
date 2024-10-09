@@ -74,7 +74,7 @@ AuthService.register = async (dni, name, email, phone, password, rol) => {
 AuthService.profile = async (email) => {
     // const user = await User.findById(req.userId)
     // ? Por qué no se usa el id que se recibe como parametro?
-    const user = await User.findById(email)
+    const user = await User.findOne({ email })
 
     if (!user) {
         throw new Error('User not found')
@@ -88,6 +88,47 @@ AuthService.profile = async (email) => {
         phone: user.phone,
         role: user.rol
     }
+}
+
+AuthService.forgotPassword = async (dni, oldPassword, newPassword) => {
+    try {
+        const user = await User.findOne({ dni });
+        
+        if (!user) {
+            return res.status(404).json({
+                message: 'Usuario no encontrado',
+            });
+        }
+    
+        const isMatch = await verified(oldPassword, user.password);
+    
+        if (!isMatch) {
+            return res.status(400).json({
+                message: 'La contraseña anterior es incorrecta',
+            });
+        }
+    
+        const hashedPassword = await encrypt(newPassword);
+    
+        user.password = hashedPassword;
+        
+        await user.save();
+
+        return {
+            user: {
+                id: user.id,
+                dni: user.dni,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                rol: user.rol
+            },
+            message: 'Usuario creado exitosamente'
+        }
+    }
+    catch (error) {
+        throw new Error(error.message)
+    }  
 }
 
 export default AuthService
