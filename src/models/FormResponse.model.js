@@ -12,8 +12,8 @@ const FormResponseSchema = new Schema({
     vehicle: {
         make: String,
         model: String,
-        year: Number,
-        licensePlate: String
+        plate: String,
+        _id: String,
     },
     sections: [
         {
@@ -29,7 +29,12 @@ const FormResponseSchema = new Schema({
     submissionTime: {
         type: Date,
         default: Date.now  // Automatically add the current timestamp
+    },
+    submissionType: {
+        type: String,
+        default: ""
     }
+
 });
 
 export default model('FormResponse', FormResponseSchema)
