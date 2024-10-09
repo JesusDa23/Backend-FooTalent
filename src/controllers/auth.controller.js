@@ -80,4 +80,30 @@ Auth.deleteUser = async (req, res) => {
     }
 };
 
+Auth.UpdatePassword = async (req, res) => {
+    const { dni } = req.params;
+    const { password } = req.body;
+
+    try {
+        const updatedUser = await User.findOneAndUpdate({ dni }, { password }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: 'Usuario no encontrado',
+            });
+        }
+
+        res.status(200).json({
+            message: 'Contraseña actualizada exitosamente',
+            data: updatedUser
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: 'Error al actualizar la contraseña',
+            error: error.message
+        })
+    }
+}
+
 export default Auth
