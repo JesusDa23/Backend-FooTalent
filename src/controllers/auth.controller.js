@@ -35,10 +35,6 @@ Auth.register = async (req, res) => {
     }
 }
 
-Auth.logout = async (req, res) => {
-    res.send('logout')
-}
-
 Auth.profile = async (req, res) => {
     console.log(req)
     try {
@@ -56,8 +52,32 @@ Auth.getUsers = async (req, res) => {
             data: allUsers
         })
     } catch (error) {
-        respuesta.json(error)
+        res.json(error)
     }
 }
+
+Auth.deleteUser = async (req, res) => {
+    const { dni } = req.params;
+
+    try {
+        const deletedUser = await User.findOneAndDelete({ dni });
+
+        if (!deletedUser) {
+            return res.status(404).json({
+                message: 'Usuario no encontrado',
+            });
+        }
+
+        res.status(200).json({
+            message: 'Usuario eliminado exitosamente',
+            data: deletedUser
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error al eliminar el usuario',
+            error: error.message
+        });
+    }
+};
 
 export default Auth

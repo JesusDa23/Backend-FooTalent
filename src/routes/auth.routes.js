@@ -7,8 +7,8 @@ const router = Router()
 
 router.post('/login', Auth.login)
 router.post('/register', validateJWT, checkAdminRole, Auth.register)
-router.post('/logout', Auth.logout)
 router.get('/profile', validateJWT, Auth.profile)
 router.get('/users', validateJWT, Auth.getUsers)
+router.delete('/users/:dni', validateJWT, checkAdminRole, Auth.deleteUser)
 
 export default router
