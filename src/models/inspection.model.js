@@ -5,7 +5,7 @@ const InspectionSchema = new Schema(
         vehicleId: { 
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Vehicle',
-            required: true
+            default: null
         },
         estado: {
             type: String,
