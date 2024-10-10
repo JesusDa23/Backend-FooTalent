@@ -7,7 +7,6 @@ import sectionRoutes from './checklistRoutes/section.routes.js'
 import bulletRoutes from './checklistRoutes/bullet.routes.js'
 import EmailRoutes from './email.routes.js'
 import InspectionRoutes from './inspection.routes.js'
-import ChecklistsRoutes from './checklists.routes.js'
 const routes = Router()
 
 routes.use('/auth', AuthRoutes)
@@ -18,6 +17,5 @@ routes.use('/checklist', bulletRoutes)
 routes.use('/checklist', sectionRoutes)
 routes.use('/email', EmailRoutes)
 routes.use('/mantenimiento', InspectionRoutes)
-routes.use('/checklists', ChecklistsRoutes)
 
 export default routes
