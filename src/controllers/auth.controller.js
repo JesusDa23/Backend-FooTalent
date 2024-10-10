@@ -36,24 +36,25 @@ Auth.register = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
-// Este es el controlador original antes de hacerle cambios, lo deje comentado por si acaso :v
-// Auth.register = async (req, res) => {
-//     const { dni, name, email, phone, password, rol } = req.body
-//     try {
-//         const user = await AuthService.register(dni, name, email, phone, password, rol)
-
-//         NotificationController.sendEmail(
-//             email,
-//             'Bienvenido a Footalent',
-//             'Gracias por registrarte en Footalent'
-//         )
-//         res.status(201).json(user)
-//     } catch (error) {
-//         res.status(500).json({ error: error.message })
-//     }
-// }
 
 
+Auth.readUser = async (req, res) => {
+    const { dni } = req.params;
+    try {
+        const user = await User.findById(dni);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        return res.status(200).json(user);
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+
+Auth.logout = async (req, res) => {
+    res.send('logout')
+}
 
 Auth.profile = async (req, res) => {
     console.log(req)

@@ -4,8 +4,8 @@ import { encrypt, verified } from '../utils/bcryp.handler.js'
 import NotificationController from '../controllers/notification.controller.js'
 const AuthService = {}
 
-AuthService.login = async (email, password) => {
-    const user = await User.findOne({ email }).select('+password')
+AuthService.login = async (dni, password) => {
+    const user = await User.findOne({ dni }).select('+password')
     if (!user) {
         throw new Error('Usuario no encontrado')
     }
@@ -23,9 +23,6 @@ AuthService.login = async (email, password) => {
             name: user.name,
             email: user.email,
             phone: user.phone,
-            address: user.address,
-            licencia: user.licencia,
-            isFirstLogin: user.isFirstLogin,
             rol: user.rol
         },
         token,
@@ -33,8 +30,7 @@ AuthService.login = async (email, password) => {
     }
 }
 
-// aca agregue los datos adicionales que se estan pidiendo
-AuthService.register = async (dni, name, email, phone, password, licencia, address, isFirstLogin, rol) => {
+AuthService.register = async (dni, name, email, phone, password, rol) => {
     try {
         const userCount = await User.countDocuments()
 
@@ -54,9 +50,6 @@ AuthService.register = async (dni, name, email, phone, password, licencia, addre
             name,
             email,
             phone,
-            licencia,
-            address,
-            isFirstLogin: true,
             password: hashPassword,
             rol
         })
@@ -74,9 +67,6 @@ AuthService.register = async (dni, name, email, phone, password, licencia, addre
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
-                address: user.address,
-                licencia: user.licencia,
-                isFirstLogin: user.isFirstLogin,
                 rol: user.rol
             },
             message: 'Usuario creado exitosamente'
