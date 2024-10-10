@@ -11,5 +11,7 @@ router.get('/profile', validateJWT, Auth.profile)
 router.get('/users', validateJWT, Auth.getUsers)
 router.delete('/users/:dni', validateJWT, checkAdminRole, Auth.deleteUser)
 router.put('/users/:dni/password', validateJWT, Auth.forgotPassword)
+router.put('/users/:dni/first-login', validateJWT, Auth.updateFirstLogin);
+
 
 export default router

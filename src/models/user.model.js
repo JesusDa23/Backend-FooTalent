@@ -24,7 +24,16 @@ const userSchema = new Schema(
             required: true,
             unique: true
         },
+        address: {
+            type: String,
+            required: true,
+        },
         phone: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        licencia: {
             type: String,
             required: true,
             unique: true
@@ -34,6 +43,11 @@ const userSchema = new Schema(
             required: true,
             enum: ['admin', 'user'],
             default: 'user'
+        },
+        isFirstLogin: {
+            type: Boolean,
+            required: true,
+            default: true
         },
         active: {
             type: Boolean,
