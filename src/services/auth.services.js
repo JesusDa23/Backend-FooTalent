@@ -4,8 +4,8 @@ import { encrypt, verified } from '../utils/bcryp.handler.js'
 import NotificationController from '../controllers/notification.controller.js'
 const AuthService = {}
 
-AuthService.login = async (dni, password) => {
-    const user = await User.findOne({ dni }).select('+password')
+AuthService.login = async (email, password) => {
+    const user = await User.findOne({ email }).select('+password')
     if (!user) {
         throw new Error('Usuario no encontrado')
     }
@@ -14,7 +14,7 @@ AuthService.login = async (dni, password) => {
         throw new Error('Contraseña incorrecta')
     }
 
-    const token = createToken({ email: user.email, rol: user.rol })
+    const token = createToken({ email: user.email, rol: user.rol, id: user.id })
 
     return {
         user: {
@@ -107,27 +107,27 @@ AuthService.profile = async email => {
 
 AuthService.forgotPassword = async (dni, oldPassword, newPassword) => {
     try {
-        const user = await User.findOne({ dni });
-        
+        const user = await User.findOne({ dni })
+
         if (!user) {
             return res.status(404).json({
-                message: 'Usuario no encontrado',
-            });
+                message: 'Usuario no encontrado'
+            })
         }
-    
-        const isMatch = await verified(oldPassword, user.password);
-    
+
+        const isMatch = await verified(oldPassword, user.password)
+
         if (!isMatch) {
             return res.status(400).json({
-                message: 'La contraseña anterior es incorrecta',
-            });
+                message: 'La contraseña anterior es incorrecta'
+            })
         }
-    
-        const hashedPassword = await encrypt(newPassword);
-    
-        user.password = hashedPassword;
-        
-        await user.save();
+
+        const hashedPassword = await encrypt(newPassword)
+
+        user.password = hashedPassword
+
+        await user.save()
 
         return {
             user: {
@@ -140,10 +140,9 @@ AuthService.forgotPassword = async (dni, oldPassword, newPassword) => {
             },
             message: 'Usuario creado exitosamente'
         }
-    }
-    catch (error) {
+    } catch (error) {
         throw new Error(error.message)
-    }  
+    }
 }
 
 export default AuthService
