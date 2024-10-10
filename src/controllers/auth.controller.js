@@ -67,14 +67,24 @@ Auth.profile = async (req, res) => {
 
 Auth.getUsers = async (req, res) => {
     try {
-        const allUsers = await User.find()
+        const userId = req.params.id;
+
+        // If an ID is provided, find the specific user; otherwise, get all users
+        const users = userId ? await User.findById(userId) : await User.find();
+
+        // If a user is not found (only in case an ID is provided), return a 404 response
+        if (userId && !users) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
         res.json({
-            data: allUsers
-        })
+            data: users
+        });
     } catch (error) {
-        res.json(error)
+        res.status(500).json({ error: error.message });
     }
-}
+};
+
 
 Auth.deleteUser = async (req, res) => {
     const { dni } = req.params;
