@@ -61,8 +61,6 @@ Auth.findUser = async (req, res) => {
         } else {
             res.status(400).json({ message: "no DNI  enviado", error: error.message });
         }
-
-
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -150,10 +148,7 @@ Auth.updateUser = async (req, res) => {
     const { name, dni, phone, email, address, licence, type_licence, expiration_licence } = req.body; // Extract data from request body
 
     try {
-        const updatedUser = await User.findByIdAndUpdate(id,
-            { name, dni, phone, email, address, licence, type_licence, expiration_licence },
-            { new: true, runValidators: true }
-        );
+        const updatedUser = await User.findByIdAndUpdate(id, { name, dni, phone, email, address, licence, type_licence, expiration_licence }, { new: true });
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }

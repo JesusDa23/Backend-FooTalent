@@ -11,10 +11,8 @@ router.get('/profile', validateJWT, Auth.profile)
 router.get('/users', validateJWT, Auth.getUsers)
 router.delete('/users/:dni', validateJWT, checkAdminRole, Auth.deleteUser)
 router.put('/users/:dni/password', validateJWT, Auth.forgotPassword)
-router.put('/users/:dni/first-login', validateJWT, Auth.updateFirstLogin);
-
-// no estan funcionando
-router.get('/users/:dni', validateJWT, checkAdminRole, Auth.findUser) 
-router.put('/users/:id', validateJWT, checkAdminRole, Auth.updateUser); 
+router.put('/users/:dni/first-login', validateJWT, Auth.updateFirstLogin)
+router.get('/users/:dni', validateJWT, Auth.findUser)
+router.put('/users/:id', validateJWT, Auth.updateUser)
 
 export default router
