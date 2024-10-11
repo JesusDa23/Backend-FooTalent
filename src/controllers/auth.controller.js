@@ -22,9 +22,9 @@ Auth.login = async (req, res) => {
 
 // aca puse los datos adicionales que se estan pidiendo 
 Auth.register = async (req, res) => {
-    const { dni, name, email, phone, password, licencia, address, isFirstLogin, rol } = req.body
+    const { dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol } = req.body
     try {
-        const user = await AuthService.register(dni, name, email, phone, password, licencia, address, isFirstLogin, rol)
+        const user = await AuthService.register(dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol)
 
         NotificationController.sendEmail(
             email,
@@ -36,24 +36,6 @@ Auth.register = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
-// Este es el controlador original antes de hacerle cambios, lo deje comentado por si acaso :v
-// Auth.register = async (req, res) => {
-//     const { dni, name, email, phone, password, rol } = req.body
-//     try {
-//         const user = await AuthService.register(dni, name, email, phone, password, rol)
-
-//         NotificationController.sendEmail(
-//             email,
-//             'Bienvenido a Footalent',
-//             'Gracias por registrarte en Footalent'
-//         )
-//         res.status(201).json(user)
-//     } catch (error) {
-//         res.status(500).json({ error: error.message })
-//     }
-// }
-
-
 
 Auth.profile = async (req, res) => {
     console.log(req)
@@ -62,6 +44,27 @@ Auth.profile = async (req, res) => {
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({ error: error.message })
+    }
+}
+
+Auth.findUser = async (req, res) => {
+    try {
+        const { dni } = req.params
+
+        if (dni) {
+            const user = await User.findOne({ dni });
+            if (user) {
+                console.log("Success");
+            } else {
+                res.status(404).json({ message: "no encontrado", error: error.message });
+            }
+        } else {
+            res.status(400).json({ message: "no DNI  enviado", error: error.message });
+        }
+
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -124,7 +127,7 @@ Auth.forgotPassword = async (req, res) => {
 
 Auth.updateFirstLogin = async (req, res) => {
     const { dni } = req.params;
-    const { isFirstLogin } = req.body; 
+    const { isFirstLogin } = req.body;
 
     try {
         const user = await User.findOneAndUpdate({ dni }, { isFirstLogin }, { new: true });
