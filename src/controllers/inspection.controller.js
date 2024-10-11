@@ -21,10 +21,10 @@ InspeccionController.list = async (req, res) => {
             if (!inspeccion) {
                 return res.status(404).json({ message: 'Inspección no encontrada' });
             }
-            res.status(201).json(inspeccion);
+            res.status(200).json(inspeccion);
         } else {
             const inspecciones = await InspeccionModel.find(); 
-            res.status(201).json(inspecciones);
+            res.status(200).json(inspecciones);
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

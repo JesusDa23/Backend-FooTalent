@@ -36,7 +36,7 @@ AuthService.login = async (email, password) => {
 }
 
 // aca agregue los datos adicionales que se estan pidiendo
-AuthService.register = async (dni, name, email, phone, address, password, licencia, type_licence, rol) => {
+AuthService.register = async (dni, name, email, phone, password, licencia, address, isFirstLogin, rol) => {
     try {
         const userCount = await User.countDocuments()
 
@@ -56,9 +56,9 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
             name,
             email,
             phone,
-            address,
             licencia,
-            type_licence, 
+            address,
+            isFirstLogin: true,
             password: hashPassword,
             rol
         })
@@ -78,7 +78,6 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
                 phone: user.phone,
                 address: user.address,
                 licencia: user.licencia,
-                type_licence: user.type_licence,
                 isFirstLogin: user.isFirstLogin,
                 rol: user.rol
             },
