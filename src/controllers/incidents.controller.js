@@ -1,19 +1,31 @@
 import IncidentsModel from "../models/incidents.model.js";
+import userModel from "../models/user.model.js";
+import NotificationController from "./notification.controller.js";
 
 const IncidentsController = {};
 
 IncidentsController.create = async (req, res) => {
     const { date, description, passengers, vehicleStateDescription } = req.body;
-    
+
     try {
         const nuevoIncidente = new IncidentsModel({
             date,
             description,
             passengers,
             vehicleStateDescription
-        }); 
+        });
 
         const incidenteGuardado = await nuevoIncidente.save();
+
+        userModel.find({ role: 'admin' }).then((users) => {
+            users.forEach((user) => {
+                NotificationController.sendReport(
+                    user.email,
+                    'Nuevo Incidente',
+                    'Se ha registrado un nuevo incidente'
+                );
+            });
+        });
 
         res.status(201).json(incidenteGuardado);
     } catch (error) {
