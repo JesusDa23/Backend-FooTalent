@@ -22,9 +22,9 @@ Auth.login = async (req, res) => {
 
 // aca puse los datos adicionales que se estan pidiendo 
 Auth.register = async (req, res) => {
-    const { dni, name, email, phone, password, licencia, address, isFirstLogin, rol } = req.body
+    const { dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol } = req.body
     try {
-        const user = await AuthService.register(dni, name, email, phone, password, licencia, address, isFirstLogin, rol)
+        const user = await AuthService.register(dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol)
 
         NotificationController.sendEmail(
             email,
@@ -36,24 +36,6 @@ Auth.register = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
-// Este es el controlador original antes de hacerle cambios, lo deje comentado por si acaso :v
-// Auth.register = async (req, res) => {
-//     const { dni, name, email, phone, password, rol } = req.body
-//     try {
-//         const user = await AuthService.register(dni, name, email, phone, password, rol)
-
-//         NotificationController.sendEmail(
-//             email,
-//             'Bienvenido a Footalent',
-//             'Gracias por registrarte en Footalent'
-//         )
-//         res.status(201).json(user)
-//     } catch (error) {
-//         res.status(500).json({ error: error.message })
-//     }
-// }
-
-
 
 Auth.profile = async (req, res) => {
     console.log(req)
@@ -65,14 +47,24 @@ Auth.profile = async (req, res) => {
     }
 }
 
-Auth.getUsers = async (req, res) => {
+Auth.findUser = async (req, res) => {
     try {
-        const allUsers = await User.find()
-        res.json({
-            data: allUsers
-        })
+        const { dni } = req.params
+
+        if (dni) {
+            const user = await User.findOne({ dni });
+
+            if (!user) {
+                return res.status(404).json({ message: "no encontrado" });
+            }
+
+            console.log(user)
+            res.status(200).json(user)
+        } else {
+            res.status(400).json({ message: "no DNI enviado" });
+        }
     } catch (error) {
-        res.json(error)
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -142,6 +134,23 @@ Auth.updateFirstLogin = async (req, res) => {
     } catch (error) {
         console.log('error:', error)
         res.status(500).json({ error: 'Error al actualizar isFirstLogin' });
+    }
+};
+
+Auth.updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { name, dni, phone, email, address, licence, type_licence, expiration_licence } = req.body; // Extract data from request body
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(id, { name, dni, phone, email, address, licence, type_licence, expiration_licence }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(400).json({ message: 'Error updating user', error: error.message });
     }
 };
 

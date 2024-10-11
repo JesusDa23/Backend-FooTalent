@@ -52,6 +52,18 @@ const userSchema = new Schema(
         active: {
             type: Boolean,
             default: false
+        },
+        type_licence: {
+            type: String,
+            enum: [
+                'comun',
+                'especial'
+            ],
+            default: 'comun'
+        },
+        expiration_licence: {
+            type: Date,
+            default: Date.now
         }
     },
     { timestamps: true }
