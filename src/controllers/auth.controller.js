@@ -53,13 +53,15 @@ Auth.findUser = async (req, res) => {
 
         if (dni) {
             const user = await User.findOne({ dni });
-            if (user) {
-                console.log("Success");
-            } else {
-                res.status(404).json({ message: "no encontrado", error: error.message });
+
+            if (!user) {
+                return res.status(404).json({ message: "no encontrado" });
             }
+
+            console.log(user)
+            res.status(200).json(user)
         } else {
-            res.status(400).json({ message: "no DNI  enviado", error: error.message });
+            res.status(400).json({ message: "no DNI enviado" });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -149,12 +151,13 @@ Auth.updateUser = async (req, res) => {
 
     try {
         const updatedUser = await User.findByIdAndUpdate(id, { name, dni, phone, email, address, licence, type_licence, expiration_licence }, { new: true });
+
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         res.status(200).json(updatedUser);
     } catch (error) {
-        console.error('Error updating user:', error);
         res.status(400).json({ message: 'Error updating user', error: error.message });
     }
 };
