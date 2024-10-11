@@ -145,5 +145,24 @@ Auth.updateFirstLogin = async (req, res) => {
     }
 };
 
+Auth.updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { name, dni, phone, email, address, licence, type_licence, expiration_licence } = req.body; // Extract data from request body
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(id,
+            { name, dni, phone, email, address, licence, type_licence, expiration_licence },
+            { new: true, runValidators: true }
+        );
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(400).json({ message: 'Error updating user', error: error.message });
+    }
+};
+
 
 export default Auth
