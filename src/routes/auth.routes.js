@@ -10,7 +10,7 @@ router.post('/register', validateJWT, checkAdminRole, Auth.register)
 router.get('/users', validateJWT, Auth.profile)
 // router.delete('/users/:dni', validateJWT, checkAdminRole, Auth.deleteUser)
 router.put('/users/:dni/password', validateJWT, Auth.forgotPassword)
-router.get('/users/:dni', validateJWT, checkAdminRole, Auth.readUser)
+router.put('/users/:dni/first-login', validateJWT, Auth.updateFirstLogin);
 
 
 export default router
