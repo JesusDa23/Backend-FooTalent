@@ -17,7 +17,7 @@ IncidentsController.create = async (req, res) => {
 
         const incidenteGuardado = await nuevoIncidente.save();
 
-        userModel.find({ role: 'admin' }).then((users) => {
+        userModel.find({ rol: 'admin' }).then((users) => {
             users.forEach((user) => {
                 NotificationController.sendReport(
                     user.email,
