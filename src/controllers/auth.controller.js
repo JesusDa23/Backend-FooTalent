@@ -76,6 +76,17 @@ Auth.getUsers = async (req, res) => {
     }
 }
 
+Auth.getUser = async (req, res) => {
+    try {
+        const dataUser = await User.findOne({ email: req.params.email })
+        res.json({
+            dataUser
+        })
+    } catch (error) {
+        res.json(error)
+    }
+}
+
 Auth.deleteUser = async (req, res) => {
     const { dni } = req.params;
 
@@ -102,19 +113,20 @@ Auth.deleteUser = async (req, res) => {
 
 Auth.forgotPassword = async (req, res) => {
     const { dni } = req.params
-    const { oldPassword, newPassword } = req.body
+    const { oldPassword, newPassword, forEmail } = req.body
 
     try {
-        const user = await AuthService.forgotPassword(dni, oldPassword, newPassword)
+        const user = await AuthService.forgotPassword(dni, oldPassword, newPassword, forEmail)
         res.status(200).json(user)
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: error.message })
     }
 }
 
 Auth.updateFirstLogin = async (req, res) => {
     const { dni } = req.params;
-    const { isFirstLogin } = req.body; 
+    const { isFirstLogin } = req.body;
 
     try {
         const user = await User.findOneAndUpdate({ dni }, { isFirstLogin }, { new: true });
@@ -128,9 +140,22 @@ Auth.updateFirstLogin = async (req, res) => {
             user
         });
     } catch (error) {
+        console.log('error:', error)
         res.status(500).json({ error: 'Error al actualizar isFirstLogin' });
     }
 };
+
+
+Auth.forgotPasswordForEmail = async (req, res) => {
+    const { email } = req.params
+
+    try {
+        const tokenUser = await AuthService.forgotPasswordForEmail(email)
+        res.status(200).json(tokenUser)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
 
 
 export default Auth
