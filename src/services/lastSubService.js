@@ -20,7 +20,7 @@ const saveSubmission = async (req, res) => {
     }
 
     // Create a new submission
-    const newSubmission = new Submission({
+    const newSubmission = new Usersubmission({
       userId,
       submissionType,
       data
