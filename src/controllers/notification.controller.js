@@ -75,7 +75,9 @@ const NotificationController = {
                 </div>
                 <footer style="text-align: center; font-size: 12px; color: #888; margin-top: 30px;">
                     <p>Fleet Management - Soluciones para la gestión eficiente de flotas vehiculares</p>
-                    <p><a href="https://www.fleetmanagement.com" style="color: #1E88E5; text-decoration: none;">Visítanos</a> | <a href="mailto:
+                    <p><a href="https://www.fleetmanagement.com" style="color: #1E88E5; text-decoration: none;">Visítanos</a> | <a href="mailto:contact@fleetmanagement.com" style="color: #E53935; text-decoration: none;">Contáctanos</a></p>
+                </footer>
+            </div>
         `
         }
         const infoNotification = await transporter.sendMail(mailOptions)
