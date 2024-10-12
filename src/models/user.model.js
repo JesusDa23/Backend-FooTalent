@@ -17,7 +17,10 @@ const userSchema = new Schema(
             type: String,
             required: true,
             trim: true,
+<<<<<<< HEAD
             // select: true
+=======
+>>>>>>> b07048cafcc40b6b12367b1f8cff3af2c38dfa1c
         },
         email: {
             type: String,

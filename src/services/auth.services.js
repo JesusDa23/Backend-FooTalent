@@ -57,8 +57,12 @@ AuthService.register = async (dni, name, email, phone, password, licencia, addre
             email,
             phone,
             licencia,
+<<<<<<< HEAD
             address,
             isFirstLogin: true,
+=======
+            type_licence,
+>>>>>>> b07048cafcc40b6b12367b1f8cff3af2c38dfa1c
             password: hashPassword,
             rol
         })
@@ -107,6 +111,52 @@ AuthService.profile = async email => {
     }
 }
 
+<<<<<<< HEAD
+AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = false) => {
+    try {
+        // Busca el usuario por su DNI
+        const user = await User.findOne({ dni });
+=======
+AuthService.forgotPasswordForEmailService = async (email) => {
+    try {
+        // Busca el usuario por su DNI
+        const user = await User.findOne({ email });
+>>>>>>> b07048cafcc40b6b12367b1f8cff3af2c38dfa1c
+
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+<<<<<<< HEAD
+        if (forEmail == false) {
+            // Verifica si la contraseña anterior coincide con la almacenada
+            const isMatch = await verified(oldPassword, user.password);
+
+            if (!isMatch) {
+                throw new Error('La contraseña anterior es incorrecta');
+            }
+        }
+
+        // Encripta la nueva contraseña
+        const hashedPassword = await encrypt(newPassword);
+
+=======
+        const tokenChangePassword = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+        console.log('tokenChangePassword:', tokenChangePassword)
+
+        NotificationController.sendEmail(
+            email,
+            'Mensaje de olvide contraseña',
+            `Hola ${user.name}, si desea cambiar su contraseña, por favor ingrese al siguiente enlace: http://localhost:4200/change-password-for-email/${tokenChangePassword}`
+        )
+
+        return tokenChangePassword
+
+    } catch (error) {
+        throw new Error(error.message); // Lanza el error para que el controlador lo gestione
+    }
+}
+
 AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = false) => {
     try {
         // Busca el usuario por su DNI
@@ -128,6 +178,7 @@ AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = fa
         // Encripta la nueva contraseña
         const hashedPassword = await encrypt(newPassword);
 
+>>>>>>> b07048cafcc40b6b12367b1f8cff3af2c38dfa1c
         // Actualiza la contraseña en la base de datos
         user.password = hashedPassword;
         await User.findByIdAndUpdate(user._id, user);
@@ -149,6 +200,7 @@ AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = fa
 }
 
 
+<<<<<<< HEAD
 AuthService.forgotPasswordForEmail = async (email) => {
     try {
         // Busca el usuario por su DNI
@@ -174,5 +226,7 @@ AuthService.forgotPasswordForEmail = async (email) => {
     }
 }
 
+=======
+>>>>>>> b07048cafcc40b6b12367b1f8cff3af2c38dfa1c
 
 export default AuthService

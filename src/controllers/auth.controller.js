@@ -1,7 +1,6 @@
 import AuthService from '../services/auth.services.js'
 import NotificationController from './notification.controller.js'
 import User from '../models/user.model.js'
-import { encrypt, verified } from '../utils/bcryp.handler.js'
 
 const Auth = {}
 
@@ -15,6 +14,17 @@ Auth.login = async (req, res) => {
         }
 
         res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+Auth.forgotPasswordForEmail = async (req, res) => {
+    const { email } = req.params
+
+    try {
+        const tokenUser = await AuthService.forgotPasswordForEmailService(email);
+        res.status(200).json(tokenUser)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -71,6 +81,20 @@ Auth.getUsers = async (req, res) => {
         res.json({
             data: allUsers
         })
+        const { id } = req.params
+
+        if (id) {
+            const user = await User.findById(id);
+
+            if (!user) {
+                return res.status(404).json({ message: "no encontrado" });
+            }
+
+            console.log(user)
+            res.status(200).json(user)
+        } else {
+            res.status(400).json({ message: "no Id enviado" });
+        }
     } catch (error) {
         res.json(error)
     }
@@ -79,13 +103,19 @@ Auth.getUsers = async (req, res) => {
 Auth.getUser = async (req, res) => {
     try {
         const dataUser = await User.findOne({ email: req.params.email })
+        const users = await User.find({});
+
+        if (!users) {
+            return res.status(404).json({ message: "Users not found" });
+        }
+
         res.json({
             dataUser
         })
     } catch (error) {
         res.json(error)
     }
-}
+};
 
 Auth.deleteUser = async (req, res) => {
     const { dni } = req.params;
@@ -148,6 +178,9 @@ Auth.updateFirstLogin = async (req, res) => {
 
 Auth.forgotPasswordForEmail = async (req, res) => {
     const { email } = req.params
+Auth.updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { name, dni, phone, email, address, licence, type_licence, expiration_licence } = req.body; // Extract data from request body
 
     try {
         const tokenUser = await AuthService.forgotPasswordForEmail(email)
@@ -156,6 +189,19 @@ Auth.forgotPasswordForEmail = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+Auth.forgotPassword = async (req, res) => {
+    const { dni } = req.params
+    const { oldPassword, newPassword, forEmail } = req.body
+
+    try {
+        const user = await AuthService.forgotPassword(dni, oldPassword, newPassword, forEmail)
+        res.status(200).json(user)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+};
 
 
 export default Auth
