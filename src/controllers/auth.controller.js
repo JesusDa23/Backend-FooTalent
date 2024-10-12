@@ -1,7 +1,6 @@
 import AuthService from '../services/auth.services.js'
 import NotificationController from './notification.controller.js'
 import User from '../models/user.model.js'
-import { encrypt, verified } from '../utils/bcryp.handler.js'
 
 const Auth = {}
 
@@ -15,6 +14,17 @@ Auth.login = async (req, res) => {
         }
 
         res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+Auth.forgotPasswordForEmail = async (req, res) => {
+    const { email } = req.params
+
+    try {
+        const tokenUser = await AuthService.forgotPasswordForEmailService(email);
+        res.status(200).json(tokenUser)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -113,17 +123,6 @@ Auth.deleteUser = async (req, res) => {
     }
 };
 
-Auth.forgotPassword = async (req, res) => {
-    const { dni } = req.params
-    const { oldPassword, newPassword } = req.body
-
-    try {
-        const user = await AuthService.forgotPassword(dni, oldPassword, newPassword)
-        res.status(200).json(user)
-    } catch (error) {
-        res.status(500).json({ error: error.message })
-    }
-}
 
 Auth.updateFirstLogin = async (req, res) => {
     const { dni } = req.params;
@@ -160,6 +159,45 @@ Auth.updateUser = async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: 'Error updating user', error: error.message });
     }
+}
+
+Auth.forgotPassword = async (req, res) => {
+    const { dni } = req.params
+    const { oldPassword, newPassword, forEmail } = req.body
+
+    try {
+        const user = await AuthService.forgotPassword(dni, oldPassword, newPassword, forEmail)
+        res.status(200).json(user)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error.message })
+    }
+
+
+Auth.updateFirstLogin = async (req, res) => {
+    const { dni } = req.params;
+    const { isFirstLogin } = req.body;
+
+    try {
+        const user = await User.findOneAndUpdate({ dni }, { isFirstLogin }, { new: true });
+
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        res.status(200).json({
+            message: 'isFirstLogin actualizado exitosamente',
+            user
+        });
+    } catch (error) {
+        console.log('error:', error)
+        res.status(500).json({ error: 'Error al actualizar isFirstLogin' });
+    }
+};
+
+
+
+
 };
 
 

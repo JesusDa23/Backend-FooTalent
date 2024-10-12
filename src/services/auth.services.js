@@ -106,29 +106,55 @@ AuthService.profile = async email => {
     }
 }
 
-AuthService.forgotPassword = async (dni, oldPassword, newPassword) => {
+AuthService.forgotPasswordForEmailService = async (email) => {
     try {
-        const user = await User.findOne({ dni })
+        // Busca el usuario por su DNI
+        const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(404).json({
-                message: 'Usuario no encontrado'
-            })
+            throw new Error('Usuario no encontrado');
         }
 
-        const isMatch = await verified(oldPassword, user.password)
+        const tokenChangePassword = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+        console.log('tokenChangePassword:', tokenChangePassword)
 
-        if (!isMatch) {
-            return res.status(400).json({
-                message: 'La contraseña anterior es incorrecta'
-            })
+        NotificationController.sendEmail(
+            email,
+            'Mensaje de olvide contraseña',
+            `Hola ${user.name}, si desea cambiar su contraseña, por favor ingrese al siguiente enlace: http://localhost:4200/change-password-for-email/${tokenChangePassword}`
+        )
+
+        return tokenChangePassword
+
+    } catch (error) {
+        throw new Error(error.message); // Lanza el error para que el controlador lo gestione
+    }
+}
+
+AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = false) => {
+    try {
+        // Busca el usuario por su DNI
+        const user = await User.findOne({ dni });
+
+        if (!user) {
+            throw new Error('Usuario no encontrado');
         }
 
-        const hashedPassword = await encrypt(newPassword)
+        if (forEmail == false) {
+            // Verifica si la contraseña anterior coincide con la almacenada
+            const isMatch = await verified(oldPassword, user.password);
 
-        user.password = hashedPassword
+            if (!isMatch) {
+                throw new Error('La contraseña anterior es incorrecta');
+            }
+        }
 
-        await user.save()
+        // Encripta la nueva contraseña
+        const hashedPassword = await encrypt(newPassword);
+
+        // Actualiza la contraseña en la base de datos
+        user.password = hashedPassword;
+        await User.findByIdAndUpdate(user._id, user);
 
         return {
             user: {
@@ -139,11 +165,13 @@ AuthService.forgotPassword = async (dni, oldPassword, newPassword) => {
                 phone: user.phone,
                 rol: user.rol
             },
-            message: 'Usuario creado exitosamente'
-        }
+            message: 'Contraseña actualizada exitosamente'
+        };
     } catch (error) {
-        throw new Error(error.message)
+        throw new Error(error.message); // Lanza el error para que el controlador lo gestione
     }
 }
+
+
 
 export default AuthService
