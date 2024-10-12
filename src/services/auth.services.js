@@ -56,7 +56,7 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
             phone,
             address,
             licencia,
-            type_licence, 
+            type_licence,
             password: hashPassword,
             rol
         })
@@ -128,7 +128,7 @@ AuthService.forgotPasswordForEmailService = async (email) => {
 
     } catch (error) {
         throw new Error(error.message); // Lanza el error para que el controlador lo gestione
-    }
+    }
 }
 
 AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = false) => {
