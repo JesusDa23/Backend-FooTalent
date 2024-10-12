@@ -2,6 +2,8 @@ import User from '../models/user.model.js'
 import { createToken } from '../utils/createToken.js'
 import { encrypt, verified } from '../utils/bcryp.handler.js'
 import NotificationController from '../controllers/notification.controller.js'
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../config/env.config.js'
 const AuthService = {}
 
 AuthService.login = async (email, password) => {
@@ -127,6 +129,7 @@ AuthService.forgotPasswordForEmailService = async (email) => {
         return tokenChangePassword
 
     } catch (error) {
+        console.log('error:', error)
         throw new Error(error.message); // Lanza el error para que el controlador lo gestione
     }
 }
@@ -168,6 +171,8 @@ AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = fa
             message: 'Contraseña actualizada exitosamente'
         };
     } catch (error) {
+        console.log("error:", error);
+        
         throw new Error(error.message); // Lanza el error para que el controlador lo gestione
     }
 }
