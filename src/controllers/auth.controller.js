@@ -120,10 +120,10 @@ Auth.deleteUser = async (req, res) => {
 
 Auth.updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, dni, phone, email, address, licence, type_licence, isFirstLogin, expiration_licence } = req.body; // Extract data from request body
+    const { name, dni, phone, email, address, licence, type_licence, expiration_licence } = req.body; // Extract data from request body
 
     try {
-        const updatedUser = await User.findByIdAndUpdate(id, { name, dni, phone, email, address, licence, type_licence, isFirstLogin, expiration_licence }, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(id, { name, dni, phone, email, address, licence, type_licence, expiration_licence }, { new: true });
 
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
