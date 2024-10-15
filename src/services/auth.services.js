@@ -134,10 +134,10 @@ AuthService.forgotPasswordForEmailService = async (email) => {
     }
 }
 
-AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = false) => {
+AuthService.forgotPassword = async (_id, oldPassword, newPassword, forEmail = false) => {
     try {
         // Busca el usuario por su DNI
-        const user = await User.findOne({ dni });
+        const user = await User.findOne({ _id });
 
         if (!user) {
             throw new Error('Usuario no encontrado');

@@ -12,7 +12,8 @@ router.get('/users', validateJWT, Auth.getUsers)
 router.delete('/users/:dni', validateJWT, checkAdminRole, Auth.deleteUser)
 router.get('/users/:id', Auth.findUser)
 router.put('/users/:id', validateJWT, Auth.updateUser)
-router.put('/users/:dni/password', validateJWT, Auth.forgotPassword)
+router.put('/users/:id/password', Auth.forgotPassword)
 router.put('/users/:email/password-for-email', Auth.forgotPasswordForEmail)
+router.put('/users/:id/first-login', Auth.updateFirstLogin)
 
 export default router

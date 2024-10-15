@@ -62,7 +62,7 @@ Auth.findUser = async (req, res) => {
         const { id } = req.params
 
         if (id) {
-            const user = await User.findById(id);
+            const user = await User.find({ email: id });
 
             if (!user) {
                 return res.status(404).json({ message: "no encontrado" });
@@ -135,12 +135,34 @@ Auth.updateUser = async (req, res) => {
     }
 }
 
+Auth.updateFirstLogin = async (req, res) => {
+    const { id } = req.params;
+    console.log(req.params);
+    console.log(req.body);
+    
+    const firstLogin = req.body.isFirstLogin
+    try {
+        const updatedUser = await User.findByIdAndUpdate(id, { isFirstLogin: firstLogin }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.log(error);
+        
+        res.status(400).json({ message: 'Error updating user', error: error.message });
+    }
+
+}
+
 Auth.forgotPassword = async (req, res) => {
-    const { dni } = req.params
+    const { id } = req.params
     const { oldPassword, newPassword, forEmail } = req.body
 
     try {
-        const user = await AuthService.forgotPassword(dni, oldPassword, newPassword, forEmail)
+        const user = await AuthService.forgotPassword(id, oldPassword, newPassword, forEmail)
         res.status(200).json(user)
     } catch (error) {
         console.log(error)
