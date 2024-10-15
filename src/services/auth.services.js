@@ -11,6 +11,8 @@ AuthService.login = async (email, password) => {
     if (!user) {
         throw new Error('Usuario no encontrado')
     }
+    console.log(user)
+
     const isCorrect = await verified(password, user.password)
     if (!isCorrect) {
         throw new Error('Contraseña incorrecta')
