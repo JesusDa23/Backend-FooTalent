@@ -62,8 +62,8 @@ Auth.findUser = async (req, res) => {
         const { id } = req.params
 
         if (id) {
-            const user = await User.find({ email: id });
-
+            const user = await User.findById(id);
+            
             if (!user) {
                 return res.status(404).json({ message: "no encontrado" });
             }
