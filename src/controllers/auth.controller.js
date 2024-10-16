@@ -78,6 +78,27 @@ Auth.findUser = async (req, res) => {
     }
 }
 
+Auth.findUserByEmail = async (req, res) => {
+    try {
+        const { email } = req.params
+
+        if (email) {
+            const user = await User.find({email});
+            
+            if (!user) {
+                return res.status(404).json({ message: "no encontrado" });
+            }
+
+            console.log(user)
+            res.status(200).json(user)
+        } else {
+            res.status(400).json({ message: "no Id enviado" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 Auth.getUsers = async (req, res) => {
     try {
         const users = await User.find({});
