@@ -11,6 +11,12 @@ vehicles.create = async (req, res) => {
       if (!make || !model || !year || !vin || !plate) {
         return res.status(400).json({ message: 'Marca, modelo, año, placa y VIN son requeridos' });
       }
+
+      const vehicleFound = Vehicle.findOne({ plate })
+
+      if (vehicleFound) {
+        return res.status(400).json({ message: 'esta placa ya existe' });
+      }
   
       // Create a new Vehicle instance using the data from the request
       const newVehicle = new Vehicle({
