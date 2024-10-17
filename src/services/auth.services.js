@@ -2,6 +2,8 @@ import User from '../models/user.model.js'
 import { createToken } from '../utils/createToken.js'
 import { encrypt, verified } from '../utils/bcryp.handler.js'
 import NotificationController from '../controllers/notification.controller.js'
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../config/env.config.js'
 const AuthService = {}
 
 AuthService.login = async (dni, password) => {
@@ -9,6 +11,8 @@ AuthService.login = async (dni, password) => {
     if (!user) {
         throw new Error('Usuario no encontrado')
     }
+    console.log(user)
+
     const isCorrect = await verified(password, user.password)
     if (!isCorrect) {
         throw new Error('Contraseña incorrecta')
@@ -53,7 +57,7 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
             phone,
             address,
             licencia,
-            type_licence, 
+            type_licence,
             password: hashPassword,
             rol
         })
@@ -124,14 +128,15 @@ AuthService.forgotPasswordForEmailService = async (email) => {
         return tokenChangePassword
 
     } catch (error) {
+        console.log('error:', error)
         throw new Error(error.message); // Lanza el error para que el controlador lo gestione
-    }
+    }
 }
 
-AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = false) => {
+AuthService.forgotPassword = async (_id, oldPassword, newPassword, forEmail = false) => {
     try {
         // Busca el usuario por su DNI
-        const user = await User.findOne({ dni });
+        const user = await User.findOne({ _id });
 
         if (!user) {
             throw new Error('Usuario no encontrado');
@@ -165,6 +170,8 @@ AuthService.forgotPassword = async (dni, oldPassword, newPassword, forEmail = fa
             message: 'Contraseña actualizada exitosamente'
         };
     } catch (error) {
+        console.log("error:", error);
+        
         throw new Error(error.message); // Lanza el error para que el controlador lo gestione
     }
 }

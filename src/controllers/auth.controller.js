@@ -78,10 +78,10 @@ Auth.profile = async (req, res) => {
 
 Auth.findUser = async (req, res) => {
     try {
-        const { dni } = req.params
+        const { id } = req.params
 
-        if (dni) {
-            const user = await User.findOne({ dni });
+        if (id) {
+            const user = await User.findById(id);
 
             if (!user) {
                 return res.status(404).json({ message: "no encontrado" });
@@ -90,7 +90,28 @@ Auth.findUser = async (req, res) => {
             console.log(user)
             res.status(200).json(user)
         } else {
-            res.status(400).json({ message: "no DNI enviado" });
+            res.status(400).json({ message: "no Id enviado" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+Auth.findUserByEmail = async (req, res) => {
+    try {
+        const { email } = req.params
+
+        if (email) {
+            const user = await User.find({email});
+            
+            if (!user) {
+                return res.status(404).json({ message: "no encontrado" });
+            }
+
+            console.log(user)
+            res.status(200).json(user)
+        } else {
+            res.status(400).json({ message: "no Id enviado" });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -99,14 +120,10 @@ Auth.findUser = async (req, res) => {
 
 Auth.getUsers = async (req, res) => {
     try {
-        const userId = req.params.id;
+        const users = await User.find({});
 
-        // If an ID is provided, find the specific user; otherwise, get all users
-        const users = userId ? await User.findById(userId) : await User.find();
-
-        // If a user is not found (only in case an ID is provided), return a 404 response
-        if (userId && !users) {
-            return res.status(404).json({ message: "User not found" });
+        if (!users) {
+            return res.status(404).json({ message: "Users not found" });
         }
 
         res.json({
@@ -116,7 +133,6 @@ Auth.getUsers = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 Auth.deleteUser = async (req, res) => {
     const { dni } = req.params;
@@ -142,33 +158,12 @@ Auth.deleteUser = async (req, res) => {
     }
 };
 
-
-Auth.updateFirstLogin = async (req, res) => {
-    const { dni } = req.params;
-    const { isFirstLogin } = req.body;
-
-    try {
-        const user = await User.findOneAndUpdate({ dni }, { isFirstLogin }, { new: true });
-
-        if (!user) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
-
-        res.status(200).json({
-            message: 'isFirstLogin actualizado exitosamente',
-            user
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al actualizar isFirstLogin' });
-    }
-};
-
 Auth.updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, dni, phone, email, address, licence, type_licence, expiration_licence } = req.body; // Extract data from request body
+    const { name, dni, phone, email, address, rol, licence, type_licence, expiration_licence } = req.body; // Extract data from request body
 
     try {
-        const updatedUser = await User.findByIdAndUpdate(id, { name, dni, phone, email, address, licence, type_licence, expiration_licence }, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(id, { name, dni, phone, email, address, rol, licence, type_licence, expiration_licence }, { new: true });
 
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
@@ -180,43 +175,39 @@ Auth.updateUser = async (req, res) => {
     }
 }
 
+Auth.updateFirstLogin = async (req, res) => {
+    const { id } = req.params;
+    console.log(req.params);
+    console.log(req.body);
+
+    const firstLogin = req.body.isFirstLogin
+    try {
+        const updatedUser = await User.findByIdAndUpdate(id, { isFirstLogin: firstLogin }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.log(error);
+
+        res.status(400).json({ message: 'Error updating user', error: error.message });
+    }
+
+}
+
 Auth.forgotPassword = async (req, res) => {
-    const { dni } = req.params
+    const { id } = req.params
     const { oldPassword, newPassword, forEmail } = req.body
 
     try {
-        const user = await AuthService.forgotPassword(dni, oldPassword, newPassword, forEmail)
+        const user = await AuthService.forgotPassword(id, oldPassword, newPassword, forEmail)
         res.status(200).json(user)
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: error.message })
     }
-
-
-Auth.updateFirstLogin = async (req, res) => {
-    const { dni } = req.params;
-    const { isFirstLogin } = req.body;
-
-    try {
-        const user = await User.findOneAndUpdate({ dni }, { isFirstLogin }, { new: true });
-
-        if (!user) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
-
-        res.status(200).json({
-            message: 'isFirstLogin actualizado exitosamente',
-            user
-        });
-    } catch (error) {
-        console.log('error:', error)
-        res.status(500).json({ error: 'Error al actualizar isFirstLogin' });
-    }
-};
-
-
-
-
 };
 
 
