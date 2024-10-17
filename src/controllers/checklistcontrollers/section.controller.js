@@ -1,6 +1,7 @@
 import Section from '../../models/checklistmodels/section.model.js';
 import Category from '../../models/checklistmodels/category.model.js';
 import Bullet from '../../models/checklistmodels/bullet.model.js';
+import mongoose from 'mongoose';
 
 const section = {}
 
@@ -114,7 +115,7 @@ section.updateSection = async (req, res) => {
 // Delete a Section
 section.deleteSection = async (req, res) => {
     try {
-        const deletedSection = await Section.findByIdAndRemove(req.params.id);
+        const deletedSection = await Section.findByIdAndDelete(req.params.id);
 
         if (!deletedSection) {
             return res.status(404).send({
@@ -134,6 +135,8 @@ section.deleteSection = async (req, res) => {
         });
     }
 };
+
+
 
 section.getSectionsByCategory = async (req, res) => {
     try {

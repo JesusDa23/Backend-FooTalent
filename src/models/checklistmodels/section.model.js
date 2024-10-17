@@ -1,4 +1,5 @@
-import mongoose, { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
 const sectionSchema = new Schema({
     name: {

@@ -178,16 +178,27 @@ checklist.updateChecklist = async (req, res) => {
 // Delete a checklist entry by ID
 checklist.deleteChecklist = async (req, res) => {
     try {
-        const checklist = await ChecklistVehiculo.findByIdAndDelete(
-            req.params.id
-        )
-        if (!checklist)
-            return res.status(404).json({ message: 'Checklist not found' })
-        res.status(204).send()
+        // Log the ID that is being passed
+        console.log('ID to delete:', req.params.id);
+        
+        const checklist = await ChecklistVehiculo.findByIdAndDelete(req.params.id);
+        
+        // Log the result of the deletion operation
+        console.log('Deleted checklist:', checklist);
+        
+        if (!checklist) {
+            console.log('Checklist not found');
+            return res.status(404).json({ message: 'Checklist not found' });
+        }
+
+        res.status(204).send();
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        // Log the error message
+        console.error('Error occurred while deleting checklist:', error.message);
+        res.status(500).json({ message: error.message });
     }
 }
+
 
 checklist.listforms = async (req, res) => {
     try {
