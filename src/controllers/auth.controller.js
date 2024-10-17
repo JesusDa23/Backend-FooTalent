@@ -48,65 +48,6 @@ Auth.register = async (req, res) => {
     }
 }
 
-Auth.signup = async (req, res) => {
-    try {
-        const { dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol } = req.body;
-        const hashPassword = await encrypt(password)
-        const userCount = await User.countDocuments()
-
-        const newUser = new User({
-            dni,
-            name,
-            email,
-            phone,
-            address,
-            licencia,
-            type_licence,
-            password: hashPassword,
-            isFirstLogin,
-            rol
-        })
-
-        if (userCount === 0) rol = 'admin'
-
-        const userExists = await User.findOne({
-            $or: [{ dni }, { email }]
-        })
-
-        if (userExists) {
-            throw new Error('Usuario existente')
-        }
-
-        const user = await newUser.save()
-        NotificationController.sendEmail(
-            email,
-            'Bienvenido a Fleet Management',
-            `Hola ${name}, te damos la bienvenida a nuestra plataforma. Tu contraseña provisional es: ${password}`
-        )
-        res.status(201).json(user)
-
-        return {
-            user: {
-                id: user.id,
-                dni: user.dni,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                address: user.address,
-                licencia: user.licencia,
-                type_licence: user.type_licence,
-                isFirstLogin: user.isFirstLogin,
-                rol: user.rol
-            },
-            message: 'Usuario creado exitosamente'
-        }
-
-    } catch (error) {
-        
-        throw new Error(error.message)
-    }
-}
-
 Auth.readUser = async (req, res) => {
     const { dni } = req.params;
     try {
