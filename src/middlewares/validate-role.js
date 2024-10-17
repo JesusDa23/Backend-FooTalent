@@ -1,9 +1,13 @@
 export const checkAdminRole = (req, res, next) => {
-    const { rol } = req.user
-
-    if (rol !== 'admin') {
-        return res.status(403).json({ message: 'Acceso denegado: solo los administradores pueden hacer esto.' })
+    if (!req.user) {
+        return res.status(401).json({ message: 'Acceso denegado: debe iniciar sesión primero.' });
     }
 
-    next()
-}
+    const { rol } = req.user;
+
+    if (rol !== 'admin') {
+        return res.status(403).json({ message: 'Acceso denegado: solo los administradores pueden hacer esto.' });
+    }
+
+    next();
+};

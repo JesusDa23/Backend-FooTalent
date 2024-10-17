@@ -38,7 +38,7 @@ AuthService.login = async (email, password) => {
 }
 
 // aca agregue los datos adicionales que se estan pidiendo
-AuthService.register = async (dni, name, email, phone, address, password, licencia, type_licence, rol) => {
+AuthService.register = async (dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol) => {
     try {
         const userCount = await User.countDocuments()
 
@@ -51,8 +51,11 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
         if (userExists) {
             throw new Error('Usuario existente')
         }
+
+        // Encriptar la contraseña
         const hashPassword = await encrypt(password)
 
+        // Crear el nuevo usuario
         const newUser = new User({
             dni,
             name,
@@ -62,15 +65,21 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
             licencia,
             type_licence,
             password: hashPassword,
+            isFirstLogin,  // Asegúrate de pasar isFirstLogin aquí
             rol
         })
 
+        // Guardar el nuevo usuario en la base de datos
         const user = await newUser.save()
+
+        // Enviar email de bienvenida
         NotificationController.sendEmail(
             email,
             'Bienvenido a Fleet Management',
             `Hola ${name}, te damos la bienvenida a nuestra plataforma. Tu contraseña provisional es: ${password}`
         )
+
+        // Devolver los datos del usuario creado
         return {
             user: {
                 id: user.id,
