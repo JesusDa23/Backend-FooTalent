@@ -16,5 +16,6 @@ router.put('/users/:id', validateJWT, Auth.updateUser)
 router.put('/users/:id/password', Auth.forgotPassword)
 router.put('/users/:email/password-for-email', Auth.forgotPasswordForEmail)
 router.put('/users/:id/first-login', Auth.updateFirstLogin)
+router.post('/signup', validateJWT, checkAdminRole, Auth.signup)
 
 export default router
