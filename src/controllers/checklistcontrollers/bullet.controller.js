@@ -62,8 +62,15 @@ bullet.getBulletById = async (req, res) => {
 
 // Update a Bullet
 bullet.updateBullet = async (req, res) => {
+    console.log('Request Body:', req.body);
+    console.log('Bullet ID:', req.params.id);
+
     try {
-        if (!req.body.section || !req.body.description || !req.body.requerido) {
+        const { section, description, requerido } = req.body.description || {}; // Destructure the nested description
+
+        // Validate incoming data
+        if (!section || !description || typeof requerido === 'undefined') {
+            console.log('Validation failed:', req.body);
             return res.status(400).send({
                 message: "Section, description, and requerido cannot be empty"
             });
@@ -72,19 +79,23 @@ bullet.updateBullet = async (req, res) => {
         const updatedBullet = await Bullet.findByIdAndUpdate(
             req.params.id,
             {
-                description: req.body.description,
+                description: description,
+                requerido: requerido, // Include 'requerido' in the update
             },
             { new: true }
         );
 
         if (!updatedBullet) {
+            console.log(`Bullet not found with id ${req.params.id}`);
             return res.status(404).send({
                 message: `Bullet not found with id ${req.params.id}`
             });
         }
 
+        console.log('Updated Bullet:', updatedBullet);
         res.status(200).send(updatedBullet);
     } catch (error) {
+        console.error('Error updating bullet:', error);
         if (error.kind === 'ObjectId') {
             return res.status(404).send({
                 message: `Bullet not found with id ${req.params.id}`
