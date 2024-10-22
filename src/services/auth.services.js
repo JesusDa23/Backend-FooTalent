@@ -30,7 +30,8 @@ AuthService.login = async (email, password) => {
             address: user.address,
             licencia: user.licencia,
             isFirstLogin: user.isFirstLogin,
-            rol: user.rol
+            rol: user.rol,
+            imageUrl: user.imageUrl,
         },
         token,
         message: 'Inicio de sesión exitoso'
@@ -91,7 +92,8 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
                 licencia: user.licencia,
                 type_licence: user.type_licence,
                 isFirstLogin: user.isFirstLogin,
-                rol: user.rol
+                rol: user.rol,
+                imageUrl: user.imageUrl,
             },
             message: 'Usuario creado exitosamente'
         }
@@ -115,7 +117,8 @@ AuthService.profile = async email => {
         name: user.name,
         email: user.email,
         phone: user.phone,
-        role: user.rol
+        rol: user.rol,
+        imageUrl: user.imageUrl,
     }
 }
 
@@ -204,7 +207,8 @@ AuthService.forgotPassword = async (_id, oldPassword, newPassword, forEmail = fa
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
-                rol: user.rol
+                rol: user.rol,
+                imageUrl: user.imageUrl,
             },
             message: 'Contraseña actualizada exitosamente'
         };

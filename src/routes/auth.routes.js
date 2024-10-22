@@ -2,6 +2,7 @@ import { Router } from 'express'
 import Auth from '../controllers/auth.controller.js'
 import { checkAdminRole } from '../middlewares/validate-role.js'
 import { validateJWT } from '../middlewares/validate-jwt.js'
+import { upload } from '../utils/uploadImage.js'
 
 const router = Router()
 
@@ -16,5 +17,6 @@ router.put('/users/:id', validateJWT, Auth.updateUser)
 router.put('/users/:id/password', Auth.forgotPassword)
 router.put('/users/:email/password-for-email', Auth.forgotPasswordForEmail)
 router.put('/users/:id/first-login', Auth.updateFirstLogin)
+router.put('/users/:id/image', validateJWT, upload.single('image'), ImageController.updateUserImage)
 
 export default router
