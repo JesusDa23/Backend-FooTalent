@@ -32,18 +32,6 @@ routes.post('/reset-password', (req, res) => {
     }
 })
 
-routes.post('/reset-password', (req, res) => {
-    try {
-        const { password } = req.body
-        const { id } = req.user
-
-        User.findByIdAndUpdate(id, { password })
-        return res.json({ message: 'Password updated' })
-    } catch (err) {
-        return res.status(500).json({ message: 'Internal server error' })
-    }
-})
-
 routes.get('/send-reset-password/:email', (req, res) => {
     try {
         const { email } = req.params
