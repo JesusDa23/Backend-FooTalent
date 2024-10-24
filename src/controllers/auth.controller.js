@@ -216,7 +216,7 @@ Auth.updateUserImage = async (req, res) => {
             return res.status(400).json({ message: 'No se ha subido ninguna imagen' });
         }
 
-        const user = await userModel.findById(id);
+        const user = await User.findById(id);
 
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
