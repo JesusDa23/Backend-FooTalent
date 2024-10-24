@@ -45,12 +45,22 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
 
         if (userCount === 0) rol = 'admin'
 
-        const userExists = await User.findOne({
-            $or: [{ dni }, { email }]
-        })
+        // Verifica si el correo ya existe
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+            throw new Error('Correo ya en uso'); // Error específico para el correo
+        }
 
-        if (userExists) {
-            throw new Error('Usuario existente')
+        // Verifica si el DNI ya existe
+        const dniExists = await User.findOne({ dni });
+        if (dniExists) {
+            throw new Error('DNI ya en uso'); // Error específico para el DNI
+        }
+
+        // Verifica si el teléfono ya existe
+        const phoneExists = await User.findOne({ phone });
+        if (phoneExists) {
+            throw new Error('Teléfono ya en uso'); // Error específico para el teléfono
         }
 
         // Encriptar la contraseña
@@ -66,7 +76,7 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
             licencia,
             type_licence,
             password: hashPassword,
-            isFirstLogin,  // Asegúrate de pasar isFirstLogin aquí
+            isFirstLogin, 
             rol
         })
 
