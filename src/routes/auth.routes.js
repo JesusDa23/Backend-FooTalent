@@ -17,6 +17,6 @@ router.put('/users/:id', validateJWT, Auth.updateUser)
 router.put('/users/:id/password', Auth.forgotPassword)
 router.put('/users/:email/password-for-email', Auth.forgotPasswordForEmail)
 router.put('/users/:id/first-login', Auth.updateFirstLogin)
-router.put('/users/:id/image', validateJWT, upload.single('image'), ImageController.updateUserImage)
+router.put('/users/:id/image', validateJWT, upload.single('image'), Auth.updateUserImage)
 
 export default router
