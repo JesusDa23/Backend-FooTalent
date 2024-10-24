@@ -1,6 +1,8 @@
 import AuthService from '../services/auth.services.js'
 import NotificationController from './notification.controller.js'
 import User from '../models/user.model.js'
+import { uploadImage } from '../utils/uploadImage.js'
+import fs from 'fs';
 
 const Auth = {}
 
@@ -222,8 +224,12 @@ Auth.updateUserImage = async (req, res) => {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        user.imageUrl = req.file.path;
+        const result = await uploadImage(req.file.path);
+
+        user.imageUrl = result.secure_url;
         await user.save();
+
+        fs.unlinkSync(req.file.path);
 
         res.status(200).json({
             message: 'Imagen subida y usuario actualizado con éxito',
