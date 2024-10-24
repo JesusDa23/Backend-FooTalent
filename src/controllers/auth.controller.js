@@ -229,6 +229,8 @@ Auth.updateUserImage = async (req, res) => {
         user.imageUrl = result.secure_url;
         await user.save();
 
+        fs.unlinkSync(req.file.path);
+
         res.status(200).json({
             message: 'Imagen subida y usuario actualizado con éxito',
             data: user,
