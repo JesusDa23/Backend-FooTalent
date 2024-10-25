@@ -33,6 +33,10 @@ AuthService.login = async (email, password) => {
 
         await user.save();
         throw new Error('Contraseña incorrecta')
+    } else {
+        user.failedLoginAttempts = 0;
+        user.lockUntil = null;
+        await user.save();
     }
 
     const token = createToken({ email: user.email, rol: user.rol, id: user.id })
