@@ -8,13 +8,30 @@ const AuthService = {}
 
 AuthService.login = async (email, password) => {
     const user = await User.findOne({ email }).select('+password')
+
     if (!user) {
         throw new Error('Usuario no encontrado')
     }
+
     console.log(user)
+
+    if (user.lockUntil && user.lockUntil < Date.now()) {
+        user.failedLoginAttempts = 0;
+        user.lockUntil = null;
+        await user.save();
+    }
 
     const isCorrect = await verified(password, user.password)
     if (!isCorrect) {
+        user.failedLoginAttempts++
+
+        if (user.failedLoginAttempts >= 5) {
+            user.lockUntil = new Date(Date.now() + 30 * 60 * 1000) // 30 minutos
+            await user.save();
+            throw new Error('Demasiados intentos fallidos. Cuenta bloqueada')
+        }
+
+        await user.save();
         throw new Error('Contraseña incorrecta')
     }
 
@@ -76,7 +93,7 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
             licencia,
             type_licence,
             password: hashPassword,
-            isFirstLogin, 
+            isFirstLogin,
             rol
         })
 

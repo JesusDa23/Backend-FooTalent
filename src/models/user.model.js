@@ -66,6 +66,14 @@ const userSchema = new Schema(
             type: String,
             default: 'https://cdn.icon-icons.com/icons2/1993/PNG/512/account_avatar_face_man_people_profile_user_icon_123197.png',
             required: false
+        },
+        failedLoginAttempts: {
+            type: Number,
+            default: 0
+        },
+        lockUntil: {
+            type: Date,
+            default: null
         }
     },
     { timestamps: true }
