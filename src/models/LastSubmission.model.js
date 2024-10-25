@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 
 
 const UsersubmissionSchema = new Schema({
-    userId: {
+      userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User' // Assuming you have a User model

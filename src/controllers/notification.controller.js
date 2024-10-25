@@ -47,7 +47,7 @@ const NotificationController = {
                 <h2 style="color: #E53935; font-size: 20px; text-align: center; margin-bottom: 20px;">${subject}</h2>
                 <p style="font-size: 16px; line-height: 1.6; text-align: justify; margin-bottom: 20px;">${message}</p>
                 <div style="text-align: center; margin-top: 20px;">
-                    <a href="http://localhost:4200/auth/reset-password/${linkReset}" style="background-color: #E53935; color: #fff; padding: 10px 20px; text-decoration: none; font-size: 14px; border-radius: 5px;">Restablecer Contraseña</a>
+                    <a href="https://mix-livid.vercel.app/auth/reset-password/${linkReset}" style="background-color: #E53935; color: #fff; padding: 10px 20px; text-decoration: none; font-size: 14px; border-radius: 5px;">Restablecer Contraseña</a>
                 </div>
                 <p style="font-size: 12px; color: #888; text-align: center; margin-top: 20px;">Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
                 <footer style="text-align: center; font-size: 12px; color: #888; margin-top: 30px;">

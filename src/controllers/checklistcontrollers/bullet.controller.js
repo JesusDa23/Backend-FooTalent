@@ -62,8 +62,8 @@ bullet.getBulletById = async (req, res) => {
 
 // Update a Bullet
 bullet.updateBullet = async (req, res) => {
-    console.log('Request Body:', req.body);
-    console.log('Bullet ID:', req.params.id);
+    // console.log('Request Body:', req.body);
+    // console.log('Bullet ID:', req.params.id);
 
     try {
         const { section, description, requerido } = req.body.description || {}; // Destructure the nested description
