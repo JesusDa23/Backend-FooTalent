@@ -6,6 +6,8 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config.js'
 const AuthService = {}
 
+const tokenpassreset = ""
+
 AuthService.login = async (email, password) => {
     const user = await User.findOne({ email }).select('+password')
 
@@ -155,7 +157,7 @@ AuthService.profile = async email => {
 
 AuthService.forgotPasswordForEmailService = async (email) => {
     try {
-        // Busca el usuario por su DNI
+        // Find the user by email
         const user = await User.findOne({ email });
 
         if (!user) {
@@ -163,48 +165,24 @@ AuthService.forgotPasswordForEmailService = async (email) => {
         }
 
         const tokenChangePassword = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '1h' });
-        console.log('tokenChangePassword:', tokenChangePassword)
+        console.log('tokenChangePassword:', tokenChangePassword);
 
-        NotificationController.sendEmail(
+        // Pass tokenChangePassword to sendEmailResetPassword
+        await NotificationController.sendEmailResetPassword(
             email,
-            'Mensaje de olvide contraseña',
-            `
-              <div style="font-family: Arial, sans-serif; color: #333; text-align: center;">
-                <h1 style="color: #2c3e50;">Hola ${user.name},</h1>
-                <p style="font-size: 16px;">
-                  Si desea cambiar su contraseña, por favor haga clic en el botón de abajo:
-                </p>
-                
-                <a href="http://localhost:4200/change-password-for-email/${tokenChangePassword}" 
-                   style="
-                     display: inline-block;
-                     padding: 10px 20px;
-                     font-size: 18px;
-                     color: #ffffff;
-                     background-color: #007bff;
-                     text-decoration: none;
-                     border-radius: 5px;
-                     margin-top: 20px;
-                   ">
-                   Cambiar contraseña
-                </a>
-                
-                <p style="font-size: 14px; color: #888; margin-top: 20px;">
-                  Si no solicitaste este cambio, puedes ignorar este correo.
-                </p>
-              </div>
-            `
+            'Restablecer contraseña',
+            `Hola ${user.name}, Si desea cambiar su contraseña, haga clic en el botón de abajo.`,
+            tokenChangePassword
         );
 
-
-
-        return tokenChangePassword
+        return tokenChangePassword;
 
     } catch (error) {
-        console.log('error:', error)
-        throw new Error(error.message); // Lanza el error para que el controlador lo gestione
+        console.log('error:', error);
+        throw new Error(error.message); // Re-throw the error for the controller to handle
     }
-}
+};
+
 
 AuthService.forgotPassword = async (_id, oldPassword, newPassword, forEmail = false) => {
     try {
