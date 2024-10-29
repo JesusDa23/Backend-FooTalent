@@ -12,7 +12,7 @@ vehicles.create = async (req, res) => {
         return res.status(400).json({ message: 'Marca, modelo, año, placa y VIN son requeridos' });
       }
 
-      const vehicleFound = Vehicle.findOne({ plate })
+      const vehicleFound = await Vehicle.findOne({ plate })
 
       if (vehicleFound) {
         return res.status(400).json({ message: 'esta placa ya existe' });
