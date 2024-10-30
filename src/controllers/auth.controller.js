@@ -38,11 +38,6 @@ Auth.register = async (req, res) => {
     try {
         const user = await AuthService.register(dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol)
 
-        NotificationController.sendEmail(
-            email,
-            'Bienvenido a Footalent',
-            'Gracias por registrarte en Footalent'
-        )
         res.status(201).json(user)
     } catch (error) {
         res.status(500).json({ error: error.message })

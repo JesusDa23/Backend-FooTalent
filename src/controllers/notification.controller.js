@@ -25,7 +25,7 @@ const NotificationController = {
                 <h2 style="color: #1E88E5; font-size: 20px; text-align: center; margin-bottom: 15px;">${subject}</h2>
                 <p style="font-size: 16px; line-height: 1.6; text-align: justify; margin-bottom: 20px;">${message}</p>
                 <div style="text-align: center; margin-top: 20px;">
-                    <a target="_blank" href="https://mix-livid.vercel.app/change-password" style="background-color: #1E88E5; color: #fff; padding: 10px 20px; text-decoration: none; font-size: 14px; border-radius: 5px;">Ir a la Plataforma</a>
+                    <a target="_blank" href="https://mix-livid.vercel.app" style="background-color: #1E88E5; color: #fff; padding: 10px 20px; text-decoration: none; font-size: 14px; border-radius: 5px;">Ir a la Plataforma</a>
                 </div>
                 <footer style="text-align: center; font-size: 12px; color: #888; margin-top: 30px;">
                     <p>Fleet Management - Soluciones para la gestión eficiente de flotas vehiculares</p>
