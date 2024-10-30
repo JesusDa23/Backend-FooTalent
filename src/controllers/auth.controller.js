@@ -160,20 +160,32 @@ Auth.deleteUser = async (req, res) => {
 
 Auth.updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, dni, phone, email, address, rol, licence, type_licence, expiration_licence } = req.body; // Extract data from request body
+    const { name, dni, phone, email, address, rol, licence, type_licence, expiration_licence } = req.body;
 
     try {
-        const updatedUser = await User.findByIdAndUpdate(id, { name, dni, phone, email, address, rol, licence, type_licence, expiration_licence }, { new: true });
+        // Verifica si el correo ya está registrado en otro usuario
+        const existingUser = await User.findOne({ email, _id: { $ne: id } });
+        if (existingUser) {
+            return res.status(400).json({ message: 'El correo electrónico ya está registrado en otra cuenta' });
+        }
+
+        // Actualiza el usuario si el correo no está registrado en otro usuario
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            { name, phone, email, address, rol, licence, type_licence, expiration_licence },
+            { new: true }
+        );
 
         if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
         res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(400).json({ message: 'Error updating user', error: error.message });
+        res.status(400).json({ message: 'Error actualizando usuario', error: error.message });
     }
-}
+};
+
 
 Auth.updateFirstLogin = async (req, res) => {
     const { id } = req.params;
