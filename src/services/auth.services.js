@@ -55,6 +55,7 @@ AuthService.login = async (email, password) => {
             isFirstLogin: user.isFirstLogin,
             rol: user.rol,
             imageUrl: user.imageUrl,
+            status: user.status
         },
         token,
         message: 'Inicio de sesión exitoso'
@@ -62,7 +63,7 @@ AuthService.login = async (email, password) => {
 }
 
 // aca agregue los datos adicionales que se estan pidiendo
-AuthService.register = async (dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol) => {
+AuthService.register = async (dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol, status) => {
     try {
         const userCount = await User.countDocuments()
 
@@ -71,9 +72,12 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
         // Verifica si el correo ya existe
         const emailExists = await User.findOne({ email });
         if (emailExists) {
+            res.json({
+                result: "Unsuccessful"
+            })
             throw new Error('Correo ya en uso'); // Error específico para el correo
         }
-
+        
         // Verifica si el DNI ya existe
         const dniExists = await User.findOne({ dni });
         if (dniExists) {
@@ -100,7 +104,8 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
             type_licence,
             password: hashPassword,
             isFirstLogin,
-            rol
+            rol,
+            status,
         })
 
         // Guardar el nuevo usuario en la base de datos
@@ -126,6 +131,7 @@ AuthService.register = async (dni, name, email, phone, address, password, licenc
                 type_licence: user.type_licence,
                 isFirstLogin: user.isFirstLogin,
                 rol: user.rol,
+                status: user.status,
                 imageUrl: user.imageUrl,
             },
             message: 'Usuario creado exitosamente'
@@ -151,7 +157,9 @@ AuthService.profile = async email => {
         email: user.email,
         phone: user.phone,
         rol: user.rol,
+        status: user.status,
         imageUrl: user.imageUrl,
+        
     }
 }
 
@@ -218,6 +226,7 @@ AuthService.forgotPassword = async (_id, oldPassword, newPassword, forEmail = fa
                 phone: user.phone,
                 rol: user.rol,
                 imageUrl: user.imageUrl,
+                status: user.status,
             },
             message: 'Contraseña actualizada exitosamente'
         };

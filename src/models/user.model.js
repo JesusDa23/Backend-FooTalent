@@ -74,6 +74,10 @@ const userSchema = new Schema(
         lockUntil: {
             type: Date,
             default: null
+        },
+        status: {
+            type: Boolean,
+            default: true,
         }
     },
     { timestamps: true }

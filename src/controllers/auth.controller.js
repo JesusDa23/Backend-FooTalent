@@ -34,9 +34,9 @@ Auth.forgotPasswordForEmail = async (req, res) => {
 
 // aca puse los datos adicionales que se estan pidiendo 
 Auth.register = async (req, res) => {
-    const { dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol } = req.body
+    const { dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol, status } = req.body
     try {
-        const user = await AuthService.register(dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol)
+        const user = await AuthService.register(dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol, status)
 
         res.status(201).json(user)
     } catch (error) {
@@ -155,7 +155,7 @@ Auth.deleteUser = async (req, res) => {
 
 Auth.updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, dni, phone, email, address, rol, licence, type_licence, expiration_licence } = req.body;
+    const { name, dni, phone, email, address, rol, licence, type_licence, expiration_licence, status } = req.body;
 
     try {
         // Verifica si el correo ya está registrado en otro usuario
@@ -167,7 +167,7 @@ Auth.updateUser = async (req, res) => {
         // Actualiza el usuario si el correo no está registrado en otro usuario
         const updatedUser = await User.findByIdAndUpdate(
             id,
-            { name, phone, email, address, rol, licence, type_licence, expiration_licence },
+            { name, phone, email, address, rol, licence, type_licence, expiration_licence, status },
             { new: true }
         );
 
@@ -180,7 +180,6 @@ Auth.updateUser = async (req, res) => {
         res.status(400).json({ message: 'Error actualizando usuario', error: error.message });
     }
 };
-
 
 Auth.updateFirstLogin = async (req, res) => {
     const { id } = req.params;
