@@ -64,7 +64,7 @@ const userSchema = new Schema(
         },
         imageUrl: {
             type: String,
-            default: 'https://cdn.icon-icons.com/icons2/1993/PNG/512/account_avatar_face_man_people_profile_user_icon_123197.png',
+            default: 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg',
             required: false
         },
         failedLoginAttempts: {
