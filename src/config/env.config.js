@@ -1,9 +1,9 @@
 export const JWT_SECRET = process.env.JWT_SECRET
 
 export const configCloudinary = {
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME ?? 'davwvzv8z',
-    api_key: process.env.CLOUDINARY_API_KEY ?? '248289819347799',
-    api_secret: process.env.CLOUDINARY_API_SECRET ?? 'Q1Z9Q6'
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME ?? 'di2ofhevm',
+    api_key: process.env.CLOUDINARY_API_KEY ?? '196761252387495',
+    api_secret: process.env.CLOUDINARY_API_SECRET ?? 'AtKsKtJDVSLfm5MCpkElS7godLM'
 }
 
 export const NODEMAILER_PASS = process.env.NODEMAILER_PASS
