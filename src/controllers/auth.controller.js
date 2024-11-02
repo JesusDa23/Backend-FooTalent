@@ -218,6 +218,7 @@ Auth.forgotPassword = async (req, res) => {
 
 Auth.updateUserImage = async (req, res) => {
     const { id } = req.params;
+    console.log(req.file)
 
     try {
         if (!req.file) {
@@ -230,12 +231,13 @@ Auth.updateUserImage = async (req, res) => {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        const result = await uploadImage(req.file.path);
+        const filePath = req.file.path;
+        const result = await uploadImage(filePath);
 
         user.imageUrl = result.secure_url;
         await user.save();
 
-        fs.unlinkSync(req.file.path);
+        fs.unlinkSync(filePath);
 
         res.status(200).json({
             message: 'Imagen subida y usuario actualizado con éxito',
