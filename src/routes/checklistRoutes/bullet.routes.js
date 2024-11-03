@@ -11,5 +11,4 @@ router.delete('/bullets/:id', bullet.deleteBullet);
 router.get('/sections/:sectionId/bullets', bullet.getBulletsBySection);
 router.patch('/bullets/:bulletId/requerido', bullet.updateRequeridoStatus);
 
-
 export default router 

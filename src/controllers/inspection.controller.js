@@ -61,4 +61,40 @@ InspeccionController.delete = async (req, res) => {
     }
 };
 
+InspeccionController.getFormResponseByVehicleId = async (req, res) => {
+    const { vehicleId } = req.params;
+
+    try {
+        // Convert vehicleId to ObjectId before querying
+        const mongoose = require('mongoose');
+        const vehicleIdObject = mongoose.Types.ObjectId(vehicleId); // Ensure this is an ObjectId
+
+        // Query for documents where vehicle._id matches the provided vehicleId
+        const formResponse = await FormResponse.findOne({ 'vehicle._id': vehicleIdObject })
+            .select('user.name submissionTime') // Retrieve only the driver's name and submission date
+            .exec();
+
+        // Log the vehicle ID being searched for
+        console.log(`Searching for vehicle ID: ${vehicleIdObject}`);
+
+        // If no record is found, return a 404 response
+        if (!formResponse) {
+            console.error(`No form response found for vehicle ID: ${vehicleId}`);
+            return res.status(404).json({ message: 'No form response found for this vehicle ID' });
+        }
+
+        // Log the retrieved formResponse before sending it
+        console.log('Retrieved formResponse:', formResponse);
+
+        // Send the retrieved data as a JSON response
+        res.json({
+            driverName: formResponse.user.name,
+            submissionDate: formResponse.submissionTime
+        });
+    } catch (error) {
+        console.error('Error retrieving form response:', error);
+        res.status(500).json({ message: 'Server error while retrieving form response' });
+    }
+};
+
 export default InspeccionController;

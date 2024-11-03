@@ -5,14 +5,13 @@ import { uploadImage } from '../utils/uploadImage.js'
 import fs from 'fs';
 
 const Auth = {}
-
 Auth.login = async (req, res) => {
     const { email, password } = req.body
     try {
         const user = await AuthService.login(email, password)
 
         if (!user) {
-            return res.status(401).json({ error: 'Invalid credentials' })
+            return res.status(401).json({ error: 'Credenciales invalidas' })
         }
 
         res.status(200).json(user)
@@ -38,7 +37,7 @@ Auth.register = async (req, res) => {
     try {
         const user = await AuthService.register(dni, name, email, phone, address, password, licencia, type_licence, isFirstLogin, rol, status)
 
-        res.status(201).json(user)
+        res.status(201).json({ message: 'Usuario registrado exitosamente'})
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -49,7 +48,7 @@ Auth.readUser = async (req, res) => {
     try {
         const user = await User.findById(dni);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Usuario no encontrado' });
         }
         return res.status(200).json(user);
     } catch (error) {
